@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/wishes")
+@RequestMapping("/api/v1/wishes")
 public class WishController {
 
     private final WishService wishService;
@@ -53,7 +53,7 @@ public class WishController {
         Member member = requireMember(authorization);
         Wish wish = wishService.add(member.getId(), request.productId());
         return ResponseEntity.status(HttpStatus.CREATED)
-            .location(URI.create("/api/wishes/" + wish.getId()))
+            .location(URI.create("/api/v1/wishes/" + wish.getId()))
             .body(ApiResponse.success(WishDto.Response.from(wish)));
     }
 

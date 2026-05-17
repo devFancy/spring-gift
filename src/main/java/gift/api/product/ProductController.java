@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/v1/products")
 public class ProductController {
 
     private final ProductService productService;
@@ -43,7 +43,7 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ApiResponse<ProductDto.Response>> createProduct(@Valid @RequestBody ProductDto.Request request) {
         Product saved = productService.create(request.name(), request.price(), request.imageUrl(), request.categoryId(), false);
-        return ResponseEntity.created(URI.create("/api/products/" + saved.getId()))
+        return ResponseEntity.created(URI.create("/api/v1/products/" + saved.getId()))
             .body(ApiResponse.success(ProductDto.Response.from(saved)));
     }
 
