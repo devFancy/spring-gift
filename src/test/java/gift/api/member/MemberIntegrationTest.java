@@ -1,8 +1,8 @@
 package gift.api.member;
 
 import gift.IntegrationTestSupport;
-import gift.member.Member;
-import gift.member.MemberRepository;
+import gift.storage.member.Member;
+import gift.storage.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

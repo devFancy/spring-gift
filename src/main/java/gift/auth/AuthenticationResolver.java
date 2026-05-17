@@ -1,7 +1,7 @@
 package gift.auth;
 
-import gift.member.Member;
-import gift.member.MemberRepository;
+import gift.storage.member.Member;
+import gift.storage.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

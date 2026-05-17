@@ -1,7 +1,7 @@
 package gift.auth;
 
-import gift.member.Member;
-import gift.member.MemberRepository;
+import gift.storage.member.Member;
+import gift.storage.member.MemberRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

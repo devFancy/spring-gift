@@ -1,18 +1,15 @@
-package gift.member;
+package gift.storage.member;
 
+import gift.support.error.CoreException;
+import gift.support.error.ErrorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-/**
- * Represents a registered member.
- *
- * @author brian.kim
- * @since 1.0
- */
 @Entity
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,18 +45,17 @@ public class Member {
 
     public void chargePoint(int amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("Amount must be greater than zero.");
+            throw new CoreException(ErrorType.INVALID_REQUEST, "충전 금액은 1 이상이어야 합니다.");
         }
         this.point += amount;
     }
 
-    // point deduction for order payment
     public void deductPoint(int amount) {
         if (amount <= 0) {
-            throw new IllegalArgumentException("차감 금액은 1 이상이어야 합니다.");
+            throw new CoreException(ErrorType.INVALID_REQUEST, "차감 금액은 1 이상이어야 합니다.");
         }
         if (amount > this.point) {
-            throw new IllegalArgumentException("포인트가 부족합니다.");
+            throw new CoreException(ErrorType.CONFLICT, "포인트가 부족합니다.");
         }
         this.point -= amount;
     }

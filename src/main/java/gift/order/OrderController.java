@@ -1,8 +1,8 @@
 package gift.order;
 
 import gift.auth.AuthenticationResolver;
-import gift.member.Member;
-import gift.member.MemberRepository;
+import gift.storage.member.Member;
+import gift.storage.member.MemberRepository;
 import gift.option.Option;
 import gift.option.OptionRepository;
 import gift.wish.WishRepository;
