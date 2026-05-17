@@ -22,24 +22,37 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Spring Boot
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+
+    // DB
+    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("com.h2database:h2")
+
+    // Flyway
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
+
+    // JWT
     implementation(platform("io.jsonwebtoken:jjwt-bom:0.13.0"))
     implementation("io.jsonwebtoken:jjwt-api")
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
-    runtimeOnly("com.h2database:h2")
-    runtimeOnly("com.mysql:mysql-connector-j")
+
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
-    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // REST Docs
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
 }
 
 kotlin {
