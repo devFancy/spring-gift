@@ -1,6 +1,6 @@
 package gift.option;
 
-import gift.product.Product;
+import gift.storage.product.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

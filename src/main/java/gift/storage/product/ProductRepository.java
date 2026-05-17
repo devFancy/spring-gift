@@ -1,4 +1,4 @@
-package gift.product;
+package gift.storage.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

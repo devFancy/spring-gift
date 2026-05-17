@@ -1,7 +1,7 @@
 package gift.option;
 
-import gift.product.Product;
-import gift.product.ProductRepository;
+import gift.storage.product.Product;
+import gift.storage.product.ProductRepository;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;

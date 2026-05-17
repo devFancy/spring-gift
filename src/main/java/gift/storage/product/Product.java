@@ -1,4 +1,4 @@
-package gift.product;
+package gift.storage.product;
 
 import gift.category.Category;
 import gift.option.Option;
@@ -16,11 +16,15 @@ import java.util.List;
 
 @Entity
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     private int price;
+
     private String imageUrl;
 
     @ManyToOne
