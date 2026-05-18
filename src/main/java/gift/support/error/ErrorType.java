@@ -2,6 +2,7 @@ package gift.support.error;
 
 import org.springframework.http.HttpStatus;
 
+// E{HTTP_STATUS}_{NNN} 형식. 같은 status 안의 비즈니스 케이스를 코드 시퀀스로 세분화하기 위함.
 public enum ErrorType {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "E400_001", "잘못된 요청입니다"),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "E401_001", "인증이 필요합니다"),
