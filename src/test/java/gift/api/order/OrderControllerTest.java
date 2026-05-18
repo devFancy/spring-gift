@@ -2,8 +2,8 @@ package gift.api.order;
 
 import gift.IntegrationTestSupport;
 import gift.auth.JwtProvider;
-import gift.order.Order;
-import gift.order.OrderRepository;
+import gift.storage.order.Order;
+import gift.storage.order.OrderRepository;
 import gift.storage.category.Category;
 import gift.storage.category.CategoryRepository;
 import gift.storage.member.Member;
@@ -68,7 +68,7 @@ class OrderControllerTest extends IntegrationTestSupport {
                 """.formatted(option.getId());
 
             // when
-            mockMvc.perform(post("/api/orders")
+            mockMvc.perform(post("/api/v1/orders")
                     .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
@@ -97,7 +97,7 @@ class OrderControllerTest extends IntegrationTestSupport {
                 """.formatted(option.getId());
 
             // when
-            mockMvc.perform(post("/api/orders")
+            mockMvc.perform(post("/api/v1/orders")
                     .header("Authorization", "Bearer invalid-token")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
@@ -118,7 +118,7 @@ class OrderControllerTest extends IntegrationTestSupport {
                 """;
 
             // when, then
-            mockMvc.perform(post("/api/orders")
+            mockMvc.perform(post("/api/v1/orders")
                     .header("Authorization", "Bearer " + token)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
@@ -141,7 +141,7 @@ class OrderControllerTest extends IntegrationTestSupport {
             String token = jwtProvider.createToken(member.getEmail());
 
             // when, then
-            mockMvc.perform(get("/api/orders")
+            mockMvc.perform(get("/api/v1/orders")
                     .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
         }

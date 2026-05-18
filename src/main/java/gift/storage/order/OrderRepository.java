@@ -1,4 +1,4 @@
-package gift.order;
+package gift.storage.order;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,5 +1,6 @@
-package gift.order;
+package gift.infrastructure.oauth;
 
+import gift.storage.order.Order;
 import gift.storage.product.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
