@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+// record 매개변수는 @ModelAttribute 명시 없이도 Spring MVC 가 단일/객체 타입을 추론해 폼 파라미터를 필드별로 자동 binding 한다.
 @Controller
 @RequestMapping("/admin/products")
 public class AdminProductController {
