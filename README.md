@@ -55,6 +55,19 @@ PM 이나 신입 동료가 커밋 로그만 봐도 어떤 사용자 흐름이 �
 
 핵심 사용자 시나리오는 통합 테스트로 검증한다(`@SpringBootTest` + 테스트 전 DB 초기화). 같은 테스트가 실행될 때 API 문서 스니펫이 자동 생성된다(REST Docs). 통합 테스트의 클래스 이름은 `{Domain}ControllerTest`, `@DisplayName` 은 도메인 비즈니스 어휘로 작성한다.
 
+### 과제의 기능 요구사항 매핑
+
+본 과제가 요구하는 리팩터링 항목과 본 작업의 적용을 한 줄로 매핑한다.
+
+| 기능 요구사항 | 본 작업에서의 적용 |
+| --- | --- |
+| 코드 스타일 정리 | 코딩 컨벤션을 `.claude/rules/coding-convention.md` 룰로 박아 모든 변경에 자동 적용 (들여쓰기 깊이 2, 메서드 15줄, 도메인 어휘 우선 등) |
+| 불필요한 코드 제거 | 가치 낮은 테스트 정리, 사적 javadoc 메타 제거, `@Autowired` 같은 redundant 어노테이션 생략 |
+| 서비스 계층 추출 | 7개 도메인 모두 `application/*/Service` 신설. Controller 는 인증/응답 변환만 담당하도록 얇게 정리 |
+| 트랜잭션 경계 명시 | Service 클래스 상단 `@Transactional(readOnly = true)` 기본, CUD 메서드에만 `@Transactional` 명시 |
+| 누락된 작동 구현 | 본 작업은 리팩터링 전용이라 새 작동 도입 없음. 작동 보존 테스트가 누락 발생을 사전 차단 |
+| 도메인 책임 회수 | `domain/{domain}/policy/*Policy` 신설 (예: `OptionPolicy` 의 이름 중복/마지막 옵션 삭제 정책). Service 가 정책 검증을 직접 작성하지 않는다 |
+
 ---
 
 ## AI 도구 활용 기록
