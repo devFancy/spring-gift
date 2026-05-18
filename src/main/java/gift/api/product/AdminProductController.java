@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -39,17 +38,11 @@ public class AdminProductController {
     }
 
     @PostMapping
-    public String create(
-        @RequestParam String name,
-        @RequestParam int price,
-        @RequestParam String imageUrl,
-        @RequestParam Long categoryId,
-        Model model
-    ) {
+    public String create(ProductDto.Request request, Model model) {
         try {
-            productService.create(name, price, imageUrl, categoryId, true);
+            productService.create(request.name(), request.price(), request.imageUrl(), request.categoryId(), true);
         } catch (CoreException e) {
-            populateNewForm(model, List.of(e.getMessage()), name, price, imageUrl, categoryId);
+            populateNewForm(model, List.of(e.getMessage()), request);
             return "product/new";
         }
         return "redirect:/admin/products";
@@ -64,19 +57,12 @@ public class AdminProductController {
     }
 
     @PostMapping("/{id}/edit")
-    public String update(
-        @PathVariable Long id,
-        @RequestParam String name,
-        @RequestParam int price,
-        @RequestParam String imageUrl,
-        @RequestParam Long categoryId,
-        Model model
-    ) {
+    public String update(@PathVariable Long id, ProductDto.Request request, Model model) {
         try {
-            productService.update(id, name, price, imageUrl, categoryId, true);
+            productService.update(id, request.name(), request.price(), request.imageUrl(), request.categoryId(), true);
         } catch (CoreException e) {
             Product product = productService.findById(id);
-            populateEditForm(model, product, List.of(e.getMessage()), name, price, imageUrl, categoryId);
+            populateEditForm(model, product, List.of(e.getMessage()), request);
             return "product/edit";
         }
         return "redirect:/admin/products";
@@ -88,37 +74,22 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    private void populateNewForm(
-        Model model,
-        List<String> errors,
-        String name,
-        int price,
-        String imageUrl,
-        Long categoryId
-    ) {
+    private void populateNewForm(Model model, List<String> errors, ProductDto.Request request) {
         model.addAttribute("errors", errors);
-        model.addAttribute("name", name);
-        model.addAttribute("price", price);
-        model.addAttribute("imageUrl", imageUrl);
-        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("name", request.name());
+        model.addAttribute("price", request.price());
+        model.addAttribute("imageUrl", request.imageUrl());
+        model.addAttribute("categoryId", request.categoryId());
         model.addAttribute("categories", categoryService.findAll());
     }
 
-    private void populateEditForm(
-        Model model,
-        Product product,
-        List<String> errors,
-        String name,
-        int price,
-        String imageUrl,
-        Long categoryId
-    ) {
+    private void populateEditForm(Model model, Product product, List<String> errors, ProductDto.Request request) {
         model.addAttribute("errors", errors);
         model.addAttribute("product", product);
-        model.addAttribute("name", name);
-        model.addAttribute("price", price);
-        model.addAttribute("imageUrl", imageUrl);
-        model.addAttribute("categoryId", categoryId);
+        model.addAttribute("name", request.name());
+        model.addAttribute("price", request.price());
+        model.addAttribute("imageUrl", request.imageUrl());
+        model.addAttribute("categoryId", request.categoryId());
         model.addAttribute("categories", categoryService.findAll());
     }
 }
