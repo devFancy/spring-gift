@@ -1,7 +1,7 @@
 package gift.api.product;
 
 import gift.application.product.ProductService;
-import gift.category.CategoryRepository;
+import gift.storage.category.CategoryRepository;
 import gift.storage.product.Product;
 import gift.support.error.CoreException;
 import org.springframework.stereotype.Controller;

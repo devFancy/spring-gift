@@ -1,8 +1,8 @@
 package gift.api.category;
 
 import gift.IntegrationTestSupport;
-import gift.category.Category;
-import gift.category.CategoryRepository;
+import gift.storage.category.Category;
+import gift.storage.category.CategoryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ class CategoryControllerTest extends IntegrationTestSupport {
                 """;
 
             // when
-            mockMvc.perform(post("/api/categories")
+            mockMvc.perform(post("/api/v1/categories")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andExpect(status().isCreated())
@@ -71,7 +71,7 @@ class CategoryControllerTest extends IntegrationTestSupport {
             categoryRepository.save(new Category("패션", "#FFFFFF", "img", "설명2"));
 
             // when, then
-            mockMvc.perform(get("/api/categories"))
+            mockMvc.perform(get("/api/v1/categories"))
                 .andExpect(status().isOk())
                 .andDo(document("v1/categories/list"));
         }
@@ -91,7 +91,7 @@ class CategoryControllerTest extends IntegrationTestSupport {
                 """;
 
             // when
-            mockMvc.perform(put("/api/categories/{id}", saved.getId())
+            mockMvc.perform(put("/api/v1/categories/{id}", saved.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andExpect(status().isOk())
@@ -109,7 +109,7 @@ class CategoryControllerTest extends IntegrationTestSupport {
                 {"name": "수정", "color": "#FFFFFF", "imageUrl": "img", "description": "설명"}
                 """;
 
-            mockMvc.perform(put("/api/categories/{id}", 9999L)
+            mockMvc.perform(put("/api/v1/categories/{id}", 9999L)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andExpect(status().isNotFound())
@@ -128,7 +128,7 @@ class CategoryControllerTest extends IntegrationTestSupport {
             Category saved = categoryRepository.save(new Category("기존", "#000000", "img", "설명"));
 
             // when
-            mockMvc.perform(delete("/api/categories/{id}", saved.getId()))
+            mockMvc.perform(delete("/api/v1/categories/{id}", saved.getId()))
                 .andExpect(status().isNoContent())
                 .andDo(document("v1/categories/delete"));
 

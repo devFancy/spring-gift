@@ -2,8 +2,8 @@ package gift.api.wish;
 
 import gift.IntegrationTestSupport;
 import gift.auth.JwtProvider;
-import gift.category.Category;
-import gift.category.CategoryRepository;
+import gift.storage.category.Category;
+import gift.storage.category.CategoryRepository;
 import gift.storage.member.Member;
 import gift.storage.member.MemberRepository;
 import gift.storage.product.Product;

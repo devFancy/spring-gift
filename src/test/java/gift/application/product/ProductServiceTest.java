@@ -1,8 +1,8 @@
 package gift.application.product;
 
 import gift.IntegrationTestSupport;
-import gift.category.Category;
-import gift.category.CategoryRepository;
+import gift.storage.category.Category;
+import gift.storage.category.CategoryRepository;
 import gift.storage.product.Product;
 import gift.storage.product.ProductRepository;
 import gift.support.error.CoreException;
