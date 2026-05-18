@@ -1,8 +1,8 @@
 package gift.api.option;
 
 import gift.IntegrationTestSupport;
-import gift.option.Option;
-import gift.option.OptionRepository;
+import gift.storage.option.Option;
+import gift.storage.option.OptionRepository;
 import gift.storage.category.Category;
 import gift.storage.category.CategoryRepository;
 import gift.storage.product.Product;
@@ -56,7 +56,7 @@ class OptionControllerTest extends IntegrationTestSupport {
                 """;
 
             // when
-            mockMvc.perform(post("/api/products/{productId}/options", product.getId())
+            mockMvc.perform(post("/api/v1/products/{productId}/options", product.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andExpect(status().isCreated())
@@ -79,7 +79,7 @@ class OptionControllerTest extends IntegrationTestSupport {
                 """;
 
             // when
-            mockMvc.perform(post("/api/products/{productId}/options", product.getId())
+            mockMvc.perform(post("/api/v1/products/{productId}/options", product.getId())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andExpect(status().isBadRequest())
@@ -103,7 +103,7 @@ class OptionControllerTest extends IntegrationTestSupport {
             optionRepository.save(new Option(product, "옵션B", 20));
 
             // when, then
-            mockMvc.perform(get("/api/products/{productId}/options", product.getId()))
+            mockMvc.perform(get("/api/v1/products/{productId}/options", product.getId()))
                 .andExpect(status().isOk())
                 .andDo(document("v1/options/list"));
         }
@@ -122,7 +122,7 @@ class OptionControllerTest extends IntegrationTestSupport {
             optionRepository.save(new Option(product, "옵션B", 20));
 
             // when
-            mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", product.getId(), toDelete.getId()))
+            mockMvc.perform(delete("/api/v1/products/{productId}/options/{optionId}", product.getId(), toDelete.getId()))
                 .andExpect(status().isNoContent())
                 .andDo(document("v1/options/delete"));
 
@@ -139,7 +139,7 @@ class OptionControllerTest extends IntegrationTestSupport {
             Option last = optionRepository.save(new Option(product, "옵션A", 10));
 
             // when
-            mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", product.getId(), last.getId()))
+            mockMvc.perform(delete("/api/v1/products/{productId}/options/{optionId}", product.getId(), last.getId()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("v1/options/delete-rejected-last"));
 

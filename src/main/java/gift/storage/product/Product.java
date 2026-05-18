@@ -1,7 +1,7 @@
 package gift.storage.product;
 
 import gift.storage.category.Category;
-import gift.option.Option;
+import gift.storage.option.Option;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

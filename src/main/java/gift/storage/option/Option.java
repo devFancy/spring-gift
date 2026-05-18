@@ -1,4 +1,4 @@
-package gift.option;
+package gift.storage.option;
 
 import gift.storage.product.Product;
 import jakarta.persistence.Column;
@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "options")
 public class Option {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
