@@ -1,6 +1,6 @@
 package gift.application.order;
 
-import gift.infrastructure.oauth.KakaoMessageClient;
+import gift.infrastructure.oauth.client.KakaoMessageClient;
 import gift.storage.member.Member;
 import gift.storage.member.MemberRepository;
 import gift.storage.option.Option;

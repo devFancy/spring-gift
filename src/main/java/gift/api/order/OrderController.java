@@ -1,7 +1,7 @@
 package gift.api.order;
 
 import gift.application.order.OrderService;
-import gift.auth.AuthenticationResolver;
+import gift.api.resolver.AuthenticationResolver;
 import gift.storage.member.Member;
 import gift.storage.order.Order;
 import gift.support.error.CoreException;

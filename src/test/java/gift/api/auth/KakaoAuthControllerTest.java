@@ -1,7 +1,9 @@
 package gift.api.auth;
 
 import gift.IntegrationTestSupport;
-import gift.auth.KakaoLoginClient;
+import gift.infrastructure.oauth.client.KakaoLoginClient;
+import gift.infrastructure.oauth.dto.KakaoTokenResponse;
+import gift.infrastructure.oauth.dto.KakaoUserResponse;
 import gift.storage.member.Member;
 import gift.storage.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +11,8 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Optional;
@@ -44,7 +46,7 @@ class KakaoAuthControllerTest extends IntegrationTestSupport {
         @DisplayName("카카오 인증 페이지로 리다이렉트된다")
         void redirectsToKakao() throws Exception {
             // when, then
-            mockMvc.perform(get("/api/auth/kakao/login"))
+            mockMvc.perform(get("/api/v1/auth/kakao/login"))
                 .andExpect(status().isFound())
                 .andExpect(header().string(HttpHeaders.LOCATION,
                     containsString("kauth.kakao.com/oauth/authorize")));
@@ -61,14 +63,12 @@ class KakaoAuthControllerTest extends IntegrationTestSupport {
             // given
             String email = "new-user@kakao.example";
             given(kakaoLoginClient.requestAccessToken(anyString()))
-                .willReturn(new KakaoLoginClient.KakaoTokenResponse("access-token-stub"));
+                .willReturn(new KakaoTokenResponse("access-token-stub"));
             given(kakaoLoginClient.requestUserInfo(anyString()))
-                .willReturn(new KakaoLoginClient.KakaoUserResponse(
-                    new KakaoLoginClient.KakaoUserResponse.KakaoAccount(email)
-                ));
+                .willReturn(new KakaoUserResponse(new KakaoUserResponse.KakaoAccount(email)));
 
             // when
-            mockMvc.perform(get("/api/auth/kakao/callback").param("code", "auth-code"))
+            mockMvc.perform(get("/api/v1/auth/kakao/callback").param("code", "auth-code"))
                 .andExpect(status().isOk());
 
             // then

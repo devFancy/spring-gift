@@ -1,5 +1,6 @@
-package gift.auth;
+package gift.api.resolver;
 
+import gift.infrastructure.auth.JwtProvider;
 import gift.storage.member.Member;
 import gift.storage.member.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;

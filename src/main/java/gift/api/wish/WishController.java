@@ -1,7 +1,7 @@
 package gift.api.wish;
 
 import gift.application.wish.WishService;
-import gift.auth.AuthenticationResolver;
+import gift.api.resolver.AuthenticationResolver;
 import gift.storage.member.Member;
 import gift.storage.wish.Wish;
 import gift.support.error.CoreException;

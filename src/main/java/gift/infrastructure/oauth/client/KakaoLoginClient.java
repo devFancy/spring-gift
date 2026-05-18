@@ -1,13 +1,15 @@
-package gift.auth;
+package gift.infrastructure.oauth.client;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import gift.config.kakao.KakaoLoginProperties;
+import gift.infrastructure.oauth.dto.KakaoTokenResponse;
+import gift.infrastructure.oauth.dto.KakaoUserResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
 @Component
 public class KakaoLoginClient {
+
     private final KakaoLoginProperties properties;
     private final RestClient restClient;
 
@@ -38,21 +40,5 @@ public class KakaoLoginClient {
             .header("Authorization", "Bearer " + accessToken)
             .retrieve()
             .body(KakaoUserResponse.class);
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record KakaoTokenResponse(@JsonProperty("access_token") String accessToken) {
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public record KakaoUserResponse(@JsonProperty("kakao_account") KakaoAccount kakaoAccount) {
-
-        public String email() {
-            return kakaoAccount.email();
-        }
-
-        @JsonIgnoreProperties(ignoreUnknown = true)
-        public record KakaoAccount(String email) {
-        }
     }
 }

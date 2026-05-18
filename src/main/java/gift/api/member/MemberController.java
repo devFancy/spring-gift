@@ -1,7 +1,7 @@
 package gift.api.member;
 
+import gift.api.auth.AuthDto;
 import gift.application.member.MemberService;
-import gift.auth.TokenResponse;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -22,14 +22,14 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<TokenResponse>> register(@Valid @RequestBody MemberDto.Request request) {
-        TokenResponse tokenResponse = memberService.register(request.email(), request.password());
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(tokenResponse));
+    public ResponseEntity<ApiResponse<AuthDto.Response>> register(@Valid @RequestBody MemberDto.Request request) {
+        String token = memberService.register(request.email(), request.password());
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(new AuthDto.Response(token)));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<TokenResponse>> login(@Valid @RequestBody MemberDto.Request request) {
-        TokenResponse tokenResponse = memberService.login(request.email(), request.password());
-        return ResponseEntity.ok(ApiResponse.success(tokenResponse));
+    public ResponseEntity<ApiResponse<AuthDto.Response>> login(@Valid @RequestBody MemberDto.Request request) {
+        String token = memberService.login(request.email(), request.password());
+        return ResponseEntity.ok(ApiResponse.success(new AuthDto.Response(token)));
     }
 }

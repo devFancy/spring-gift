@@ -1,7 +1,6 @@
 package gift.application.member;
 
-import gift.auth.JwtProvider;
-import gift.auth.TokenResponse;
+import gift.infrastructure.auth.JwtProvider;
 import gift.domain.member.policy.MemberEmailPolicy;
 import gift.storage.member.Member;
 import gift.storage.member.MemberRepository;
@@ -25,16 +24,16 @@ public class MemberService {
     }
 
     @Transactional
-    public TokenResponse register(String email, String password) {
+    public String register(String email, String password) {
         MemberEmailPolicy.ensureNotDuplicated(memberRepository.existsByEmail(email));
         Member member = memberRepository.save(new Member(email, password));
-        return new TokenResponse(jwtProvider.createToken(member.getEmail()));
+        return jwtProvider.createToken(member.getEmail());
     }
 
-    public TokenResponse login(String email, String password) {
+    public String login(String email, String password) {
         Member member = findByEmail(email);
         verifyPassword(member, password);
-        return new TokenResponse(jwtProvider.createToken(member.getEmail()));
+        return jwtProvider.createToken(member.getEmail());
     }
 
     public Member findById(Long id) {

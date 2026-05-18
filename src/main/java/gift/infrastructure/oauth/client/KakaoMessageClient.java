@@ -1,4 +1,4 @@
-package gift.infrastructure.oauth;
+package gift.infrastructure.oauth.client;
 
 import gift.storage.order.Order;
 import gift.storage.product.Product;

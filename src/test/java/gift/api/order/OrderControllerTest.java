@@ -1,7 +1,7 @@
 package gift.api.order;
 
 import gift.IntegrationTestSupport;
-import gift.auth.JwtProvider;
+import gift.infrastructure.auth.JwtProvider;
 import gift.storage.order.Order;
 import gift.storage.order.OrderRepository;
 import gift.storage.category.Category;
