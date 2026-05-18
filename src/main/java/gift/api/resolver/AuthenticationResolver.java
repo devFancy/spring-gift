@@ -3,6 +3,8 @@ package gift.api.resolver;
 import gift.infrastructure.auth.JwtProvider;
 import gift.storage.member.Member;
 import gift.storage.member.MemberRepository;
+import gift.support.error.CoreException;
+import gift.support.error.ErrorType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,13 +18,21 @@ public class AuthenticationResolver {
         this.memberRepository = memberRepository;
     }
 
-    public Member extractMember(String authorization) {
+    public Member requireMember(String authorization) {
+        String email = parseEmail(authorization);
+        return memberRepository.findByEmail(email)
+            .orElseThrow(() -> new CoreException(ErrorType.UNAUTHORIZED, "인증이 필요합니다."));
+    }
+
+    private String parseEmail(String authorization) {
+        if (authorization == null) {
+            throw new CoreException(ErrorType.UNAUTHORIZED, "인증이 필요합니다.");
+        }
         try {
-            final String token = authorization.replace("Bearer ", "");
-            final String email = jwtProvider.getEmail(token);
-            return memberRepository.findByEmail(email).orElse(null);
-        } catch (Exception e) {
-            return null;
+            String token = authorization.replace("Bearer ", "");
+            return jwtProvider.getEmail(token);
+        } catch (Exception cause) {
+            throw new CoreException(ErrorType.UNAUTHORIZED, "인증이 필요합니다.");
         }
     }
 }

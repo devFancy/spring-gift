@@ -4,8 +4,6 @@ import gift.application.wish.WishService;
 import gift.api.resolver.AuthenticationResolver;
 import gift.storage.member.Member;
 import gift.storage.wish.Wish;
-import gift.support.error.CoreException;
-import gift.support.error.ErrorType;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -40,7 +38,7 @@ public class WishController {
         @RequestHeader("Authorization") String authorization,
         Pageable pageable
     ) {
-        Member member = requireMember(authorization);
+        Member member = authenticationResolver.requireMember(authorization);
         Page<WishDto.Response> wishes = wishService.findByMember(member.getId(), pageable).map(WishDto.Response::from);
         return ResponseEntity.ok(ApiResponse.success(wishes));
     }
@@ -50,7 +48,7 @@ public class WishController {
         @RequestHeader("Authorization") String authorization,
         @Valid @RequestBody WishDto.Request request
     ) {
-        Member member = requireMember(authorization);
+        Member member = authenticationResolver.requireMember(authorization);
         Wish wish = wishService.add(member.getId(), request.productId());
         return ResponseEntity.status(HttpStatus.CREATED)
             .location(URI.create("/api/v1/wishes/" + wish.getId()))
@@ -62,16 +60,9 @@ public class WishController {
         @RequestHeader("Authorization") String authorization,
         @PathVariable Long id
     ) {
-        Member member = requireMember(authorization);
+        Member member = authenticationResolver.requireMember(authorization);
         wishService.remove(member.getId(), id);
         return ResponseEntity.noContent().build();
     }
 
-    private Member requireMember(String authorization) {
-        Member member = authenticationResolver.extractMember(authorization);
-        if (member == null) {
-            throw new CoreException(ErrorType.UNAUTHORIZED, "인증이 필요합니다.");
-        }
-        return member;
-    }
 }

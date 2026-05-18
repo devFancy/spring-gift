@@ -4,8 +4,6 @@ import gift.application.order.OrderService;
 import gift.api.resolver.AuthenticationResolver;
 import gift.storage.member.Member;
 import gift.storage.order.Order;
-import gift.support.error.CoreException;
-import gift.support.error.ErrorType;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -38,7 +36,7 @@ public class OrderController {
         @RequestHeader("Authorization") String authorization,
         Pageable pageable
     ) {
-        Member member = requireMember(authorization);
+        Member member = authenticationResolver.requireMember(authorization);
         Page<OrderDto.Response> orders = orderService.findByMember(member.getId(), pageable)
             .map(OrderDto.Response::from);
         return ResponseEntity.ok(ApiResponse.success(orders));
@@ -49,18 +47,11 @@ public class OrderController {
         @RequestHeader("Authorization") String authorization,
         @Valid @RequestBody OrderDto.Request request
     ) {
-        Member member = requireMember(authorization);
+        Member member = authenticationResolver.requireMember(authorization);
         Order saved = orderService.place(member.getId(), request.optionId(), request.quantity(), request.message());
         return ResponseEntity.status(HttpStatus.CREATED)
             .location(URI.create("/api/v1/orders/" + saved.getId()))
             .body(ApiResponse.success(OrderDto.Response.from(saved)));
     }
 
-    private Member requireMember(String authorization) {
-        Member member = authenticationResolver.extractMember(authorization);
-        if (member == null) {
-            throw new CoreException(ErrorType.UNAUTHORIZED, "인증이 필요합니다.");
-        }
-        return member;
-    }
 }
