@@ -6,6 +6,7 @@ import gift.support.error.CoreException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,16 +34,12 @@ public class AdminMemberController {
     }
 
     @PostMapping
-    public String create(
-        @RequestParam String email,
-        @RequestParam String password,
-        Model model
-    ) {
+    public String create(@ModelAttribute MemberDto.Request request, Model model) {
         try {
-            memberService.createForAdmin(email, password);
+            memberService.createForAdmin(request.email(), request.password());
         } catch (CoreException e) {
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("email", email);
+            model.addAttribute("email", request.email());
             return "member/new";
         }
         return "redirect:/admin/members";
@@ -56,12 +53,8 @@ public class AdminMemberController {
     }
 
     @PostMapping("/{id}/edit")
-    public String update(
-        @PathVariable Long id,
-        @RequestParam String email,
-        @RequestParam String password
-    ) {
-        memberService.update(id, email, password);
+    public String update(@PathVariable Long id, @ModelAttribute MemberDto.Request request) {
+        memberService.update(id, request.email(), request.password());
         return "redirect:/admin/members";
     }
 
