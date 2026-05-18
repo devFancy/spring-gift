@@ -1,6 +1,8 @@
 package gift.storage.option;
 
 import gift.storage.product.Product;
+import gift.support.error.CoreException;
+import gift.support.error.ErrorType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,7 +41,7 @@ public class Option {
 
     public void subtractQuantity(int amount) {
         if (amount > this.quantity) {
-            throw new IllegalArgumentException("차감할 수량이 현재 재고보다 많습니다.");
+            throw new CoreException(ErrorType.CONFLICT, "차감할 수량이 현재 재고보다 많습니다.");
         }
         this.quantity -= amount;
     }

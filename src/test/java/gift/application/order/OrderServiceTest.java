@@ -48,7 +48,7 @@ class OrderServiceTest extends IntegrationTestSupport {
 
             // when, then
             assertThatThrownBy(() -> orderService.place(member.getId(), option.getId(), 3, "선물"))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(CoreException.class)
                 .hasMessageContaining("재고");
         }
 
