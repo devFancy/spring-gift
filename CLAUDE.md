@@ -53,7 +53,10 @@ src/main/java/gift/
 │   └── policy/           # 비즈니스 규칙 전담 (범위 검증, 단위 계산)
 ├── infrastructure/       # 외부 시스템 통신
 │   ├── auth/             # 토큰 발급/검증 구현체 (*Provider)
-│   └── oauth/            # 카카오 OAuth/메시지 클라이언트 (*Client)
+│   └── oauth/            # 카카오 OAuth/메시지 영역
+│       ├── client/       # 외부 API 호출 (*Client)
+│       ├── dto/          # 외부 API 응답 매핑 record
+│       └── uri/          # 외부 진입 URL 조립 (*Uri)
 ├── storage/              # 영속성 (JPA Entity, *Repository 인터페이스/구현)
 ├── support/              # 전역 예외, 공통 응답 포맷, *ErrorType enum
 └── config/
