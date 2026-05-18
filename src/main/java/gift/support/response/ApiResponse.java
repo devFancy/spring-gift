@@ -2,6 +2,7 @@ package gift.support.response;
 
 import gift.support.error.ErrorType;
 
+// 모든 HTTP 응답을 success/error 두 형태로 감싼다. 새 도메인이 추가되어도 응답 구조는 그대로 유지된다.
 public record ApiResponse<T>(
     ResultType result,
     T data,

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
+// 도메인 예외(CoreException)와 검증 예외를 ApiResponse.error 한 가지 형태로 매핑.
+// 새 예외 종류를 추가할 때는 @ExceptionHandler 메서드를 같은 패턴으로 한 줄 더 추가한다.
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
 
