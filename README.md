@@ -18,7 +18,7 @@
 - [x] 빌드 설정 정리 - Java 전용 프로젝트와 어긋난 빌드 설정 제거
 - [x] 카테고리 - 같은 패턴 적용, ControllerTest 로 외부 계약 검증
 - [x] 상품 옵션 - 같은 패턴 적용, ControllerTest와 ServiceTest 함께 작성
-- [ ] 주문 - 같은 패턴 적용, 카카오 메시지 클라이언트 분리
+- [x] 주문 - 같은 패턴 적용, 카카오 메시지 클라이언트 분리, ControllerTest와 ServiceTest 함께 작성
 - [ ] 카카오 로그인과 인증 - OAuth 클라이언트, 토큰 발급/검증, ArgumentResolver 분리
 
 ---
