@@ -19,10 +19,16 @@ spring-gift 테스트 작성과 실행에 대한 룰. TDD 루프, 두 가지 테
 
 ### 사용자 시나리오 통합 테스트
 
-- 대상: `application/*Service` 의 핵심 유스케이스.
-- 실제 DB 와 외부 의존을 포함한 흐름을 검증한다.
-- `IntegrationTestSupport` (또는 spring-gift 에 신설할 동등 클래스)를 베이스로 한다. `@SpringBootTest` + `DatabaseCleaner` 패턴 차용.
-- 테스트 패키지: 대상과 동일하게 미러링 (예: `application/product/ProductServiceTest`).
+도메인 작업 시 두 종류의 통합 테스트를 함께 작성한다. 둘 중 하나만 만들지 않는다.
+
+- `{Domain}ControllerTest` (`api/{domain}/`): HTTP 진입점에서 외부 계약(URL, 인증, status code, 권한)을 검증한다.
+- `{Domain}ServiceTest` (`application/{domain}/`): 인증을 우회한 비즈니스 흐름 자체를 검증한다. 도메인 정책 분기, 운영자 흐름, idempotent 보장 등 ControllerTest 가 닿지 않는 시나리오 중심.
+
+공통 사항:
+- `IntegrationTestSupport` (또는 spring-gift 에 신설할 동등 클래스) 를 베이스로 한다. `@SpringBootTest` + `DatabaseCleaner` + 테스트 전 truncate 패턴.
+- 테스트 패키지는 대상과 동일하게 미러링한다.
+- 클래스 `@DisplayName` 은 도메인 비즈니스 어휘로 작성하고, `@Nested` 로 시나리오 그룹을 만든다.
+- 파레토 원칙을 적용한다. 모든 메서드를 다 검증하지 않고 비즈니스적으로 가치가 큰 시나리오만.
 
 ## 파레토 원칙 (20:80)
 

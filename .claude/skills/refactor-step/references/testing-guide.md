@@ -22,13 +22,16 @@
 
 ### 사용자 시나리오 통합 테스트
 
-- 대상: `application/*Service` 의 핵심 유스케이스.
-- 베이스 클래스: spring-gift 에 `IntegrationTestSupport` 가 없으면 신설한다. `@SpringBootTest` + `@ActiveProfiles("test")` + `DatabaseCleaner` 컴포넌트(테스트 전 테이블 truncate) 패턴으로 구성한다.
-- 권장 구조:
-  - `@SpringBootTest(webEnvironment = RANDOM_PORT)`
-  - `@ActiveProfiles("test")`
-  - `DatabaseCleaner` 컴포넌트로 각 테스트 전 truncate.
-- 외부 API 호출 테스트는 `@Tag("external-api")` 로 격리. CI 포함 여부는 사용자와 합의.
+도메인 한 조각을 작업할 때 통합 테스트를 두 종류로 분리해서 함께 작성한다.
+
+- `{Domain}ControllerTest` (`api/{domain}/`): HTTP 진입점에서 URL/인증/status code/권한 같은 외부 계약을 검증한다. `@AutoConfigureMockMvc` + MockMvc.
+- `{Domain}ServiceTest` (`application/{domain}/`): 인증을 우회하고 비즈니스 흐름을 직접 검증한다. 도메인 정책 분기, 운영자 흐름, idempotent 보장처럼 ControllerTest 가 닿지 않는 시나리오 중심.
+
+공통 베이스: `IntegrationTestSupport` (`@SpringBootTest` + `@ActiveProfiles("test")` + `DatabaseCleaner` 의 테스트 전 truncate). 클래스 `@DisplayName` 은 도메인 비즈니스 어휘, `@Nested` 로 시나리오 그룹.
+
+파레토 원칙: 모든 메서드를 다 검증하지 않는다. ControllerTest 와 ServiceTest 가 중복되지 않도록 시나리오를 분배하고, 비즈니스적으로 가치가 큰 시나리오만 둔다.
+
+외부 API 호출 테스트는 `@Tag("external-api")` 로 격리한다. CI 포함 여부는 사용자와 합의한다.
 
 ## BDD 와 네이밍
 
