@@ -53,7 +53,7 @@ class CategoryControllerTest extends IntegrationTestSupport {
             // then
             List<Category> all = categoryRepository.findAll();
             assertThat(all).hasSize(1);
-            assertThat(all.get(0).getName()).isEqualTo("테스트카테고리");
+            assertThat(all.get(0).getName().value()).isEqualTo("테스트카테고리");
         }
     }
 
@@ -97,7 +97,7 @@ class CategoryControllerTest extends IntegrationTestSupport {
 
             // then
             Category reloaded = categoryRepository.findById(saved.getId()).orElseThrow();
-            assertThat(reloaded.getName()).isEqualTo("수정");
+            assertThat(reloaded.getName().value()).isEqualTo("수정");
         }
 
         @Test

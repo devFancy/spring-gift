@@ -26,9 +26,9 @@ public final class CategoryDto {
         public static Response from(Category category) {
             return new Response(
                 category.getId(),
-                category.getName(),
-                category.getColor(),
-                category.getImageUrl(),
+                category.getName().value(),
+                category.getColor().value(),
+                category.getImageUrl().value(),
                 category.getDescription()
             );
         }

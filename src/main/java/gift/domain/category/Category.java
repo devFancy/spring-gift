@@ -1,18 +1,22 @@
 package gift.domain.category;
 
+import gift.domain.category.vo.CategoryColor;
+import gift.domain.category.vo.CategoryImage;
+import gift.domain.category.vo.CategoryName;
+
 public class Category {
 
     private final Long id;
-    private String name;
-    private String color;
-    private String imageUrl;
+    private CategoryName name;
+    private CategoryColor color;
+    private CategoryImage imageUrl;
     private String description;
 
     public Category(Long id, String name, String color, String imageUrl, String description) {
         this.id = id;
-        this.name = name;
-        this.color = color;
-        this.imageUrl = imageUrl;
+        this.name = new CategoryName(name);
+        this.color = new CategoryColor(color);
+        this.imageUrl = new CategoryImage(imageUrl);
         this.description = description;
     }
 
@@ -21,9 +25,9 @@ public class Category {
     }
 
     public void update(String name, String color, String imageUrl, String description) {
-        this.name = name;
-        this.color = color;
-        this.imageUrl = imageUrl;
+        this.name = new CategoryName(name);
+        this.color = new CategoryColor(color);
+        this.imageUrl = new CategoryImage(imageUrl);
         this.description = description;
     }
 
@@ -31,15 +35,15 @@ public class Category {
         return id;
     }
 
-    public String getName() {
+    public CategoryName getName() {
         return name;
     }
 
-    public String getColor() {
+    public CategoryColor getColor() {
         return color;
     }
 
-    public String getImageUrl() {
+    public CategoryImage getImageUrl() {
         return imageUrl;
     }
 

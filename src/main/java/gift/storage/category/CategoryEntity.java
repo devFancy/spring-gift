@@ -29,17 +29,17 @@ public class CategoryEntity {
 
     public static CategoryEntity from(Category category) {
         CategoryEntity entity = new CategoryEntity();
-        entity.name = category.getName();
-        entity.color = category.getColor();
-        entity.imageUrl = category.getImageUrl();
+        entity.name = category.getName().value();
+        entity.color = category.getColor().value();
+        entity.imageUrl = category.getImageUrl().value();
         entity.description = category.getDescription();
         return entity;
     }
 
     public void update(Category category) {
-        this.name = category.getName();
-        this.color = category.getColor();
-        this.imageUrl = category.getImageUrl();
+        this.name = category.getName().value();
+        this.color = category.getColor().value();
+        this.imageUrl = category.getImageUrl().value();
         this.description = category.getDescription();
     }
 
