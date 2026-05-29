@@ -10,6 +10,8 @@ import gift.infrastructure.oauth.client.KakaoMessageClient;
 import gift.support.ClockHolder;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 public class OrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
     private final OptionRepository optionRepository;
@@ -73,7 +77,8 @@ public class OrderService {
         }
         try {
             kakaoMessageClient.sendToMe(member.getKakaoAccessToken(), order, option.getProduct());
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            log.warn("카카오 메시지 전송 실패 - 주문 ID: {}, 사유: {}", order.getId(), e.getMessage());
         }
     }
 }
