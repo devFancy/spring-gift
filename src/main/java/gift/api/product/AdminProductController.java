@@ -41,7 +41,7 @@ public class AdminProductController {
     @PostMapping
     public String create(ProductDto.Request request, Model model) {
         try {
-            productService.create(request.name(), request.price(), request.imageUrl(), request.categoryId(), true);
+            productService.createForAdmin(request.name(), request.price(), request.imageUrl(), request.categoryId());
         } catch (CoreException e) {
             populateNewForm(model, List.of(e.getMessage()), request);
             return "product/new";
@@ -60,7 +60,7 @@ public class AdminProductController {
     @PostMapping("/{id}/edit")
     public String update(@PathVariable Long id, ProductDto.Request request, Model model) {
         try {
-            productService.update(id, request.name(), request.price(), request.imageUrl(), request.categoryId(), true);
+            productService.updateForAdmin(id, request.name(), request.price(), request.imageUrl(), request.categoryId());
         } catch (CoreException e) {
             Product product = productService.findById(id);
             populateEditForm(model, product, List.of(e.getMessage()), request);

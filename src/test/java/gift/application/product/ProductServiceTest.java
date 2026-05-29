@@ -37,7 +37,7 @@ class ProductServiceTest extends IntegrationTestSupport {
             Category category = saveCategory();
 
             // when
-            Product saved = productService.create("카카오 콜라보", 5000, "img", category.getId(), true);
+            Product saved = productService.createForAdmin("카카오 콜라보", 5000, "img", category.getId());
 
             // then
             assertThat(saved.getName().value()).isEqualTo("카카오 콜라보");
@@ -47,7 +47,7 @@ class ProductServiceTest extends IntegrationTestSupport {
         @Test
         @DisplayName("존재하지 않는 카테고리로 등록하면 예외가 발생한다")
         void registeringWithUnknownCategoryRaises() {
-            assertThatThrownBy(() -> productService.create("상품", 5000, "img", 9999L, false))
+            assertThatThrownBy(() -> productService.create("상품", 5000, "img", 9999L))
                 .isInstanceOf(CoreException.class)
                 .hasMessageContaining("카테고리를 찾을 수 없습니다");
         }

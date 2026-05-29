@@ -40,25 +40,43 @@ public class ProductService {
     }
 
     @Transactional
-    public Product create(String name, int price, String imageUrl, Long categoryId, boolean allowKakaoInName) {
-        ProductNamePolicy.validateKakaoUsage(name, allowKakaoInName);
-        Category category = findCategory(categoryId);
-        return productRepository.save(new Product(name, price, imageUrl, category));
+    public Product create(String name, int price, String imageUrl, Long categoryId) {
+        ProductNamePolicy.validateKakaoUsage(name);
+        return saveProduct(name, price, imageUrl, categoryId);
     }
 
     @Transactional
-    public Product update(Long id, String name, int price, String imageUrl, Long categoryId, boolean allowKakaoInName) {
-        ProductNamePolicy.validateKakaoUsage(name, allowKakaoInName);
-        Product product = findById(id);
-        Category category = findCategory(categoryId);
-        product.update(name, price, imageUrl, category);
-        productRepository.update(product);
-        return product;
+    public Product createForAdmin(String name, int price, String imageUrl, Long categoryId) {
+        return saveProduct(name, price, imageUrl, categoryId);
+    }
+
+    @Transactional
+    public Product update(Long id, String name, int price, String imageUrl, Long categoryId) {
+        ProductNamePolicy.validateKakaoUsage(name);
+        return applyUpdate(id, name, price, imageUrl, categoryId);
+    }
+
+    @Transactional
+    public Product updateForAdmin(Long id, String name, int price, String imageUrl, Long categoryId) {
+        return applyUpdate(id, name, price, imageUrl, categoryId);
     }
 
     @Transactional
     public void delete(Long id) {
         productRepository.deleteById(id);
+    }
+
+    private Product saveProduct(String name, int price, String imageUrl, Long categoryId) {
+        Category category = findCategory(categoryId);
+        return productRepository.save(new Product(name, price, imageUrl, category));
+    }
+
+    private Product applyUpdate(Long id, String name, int price, String imageUrl, Long categoryId) {
+        Product product = findById(id);
+        Category category = findCategory(categoryId);
+        product.update(name, price, imageUrl, category);
+        productRepository.update(product);
+        return product;
     }
 
     private Category findCategory(Long categoryId) {
