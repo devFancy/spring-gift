@@ -79,8 +79,4 @@ public class ProductEntity {
     public CategoryEntity getCategory() {
         return category;
     }
-
-    public List<OptionEntity> getOptions() {
-        return options;
-    }
 }
