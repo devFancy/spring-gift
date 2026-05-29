@@ -86,7 +86,7 @@ public class MemberService {
     }
 
     private void verifyPassword(Member member, String password) {
-        if (!passwordEncoder.matches(password, member.getPassword())) {
+        if (member.getPassword() == null || !passwordEncoder.matches(password, member.getPassword().value())) {
             throw new CoreException(ErrorType.INVALID_REQUEST, "이메일 또는 비밀번호가 올바르지 않습니다.");
         }
     }

@@ -51,8 +51,8 @@ class MemberControllerTest extends IntegrationTestSupport {
 
             Optional<Member> saved = memberRepository.findByEmail("register@example.com");
             assertThat(saved).isPresent();
-            assertThat(saved.get().getPassword()).isNotEqualTo("password1234");
-            assertThat(saved.get().getPassword()).isNotBlank();
+            assertThat(saved.get().getPassword().value()).isNotEqualTo("password1234");
+            assertThat(saved.get().getPassword().value()).isNotBlank();
         }
 
         @Test

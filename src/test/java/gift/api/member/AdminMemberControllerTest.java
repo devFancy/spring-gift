@@ -42,8 +42,8 @@ class AdminMemberControllerTest extends IntegrationTestSupport {
             // then
             Optional<Member> saved = memberRepository.findByEmail("admin-user@example.com");
             assertThat(saved).isPresent();
-            assertThat(saved.get().getPassword()).isNotEqualTo("password1234");
-            assertThat(saved.get().getPassword()).isNotBlank();
+            assertThat(saved.get().getPassword().value()).isNotEqualTo("password1234");
+            assertThat(saved.get().getPassword().value()).isNotBlank();
         }
     }
 }

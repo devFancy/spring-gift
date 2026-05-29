@@ -1,6 +1,7 @@
 package gift.domain.member;
 
 import gift.domain.member.vo.Email;
+import gift.domain.member.vo.Password;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 
@@ -8,14 +9,16 @@ public class Member {
 
     private final Long id;
     private Email email;
-    private String password;
+    private Password password;
     private String kakaoAccessToken;
     private int point;
 
     public Member(Long id, String email, String password, String kakaoAccessToken, int point) {
         this.id = id;
         this.email = new Email(email);
-        this.password = password;
+        if (password != null) {
+            this.password = new Password(password);
+        }
         this.kakaoAccessToken = kakaoAccessToken;
         this.point = point;
     }
@@ -30,7 +33,7 @@ public class Member {
 
     public void update(String email, String password) {
         this.email = new Email(email);
-        this.password = password;
+        this.password = new Password(password);
     }
 
     public void updateKakaoAccessToken(String kakaoAccessToken) {
@@ -62,7 +65,7 @@ public class Member {
         return email;
     }
 
-    public String getPassword() {
+    public Password getPassword() {
         return password;
     }
 
