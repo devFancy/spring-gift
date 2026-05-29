@@ -1,6 +1,7 @@
 package gift.api.member;
 
 import gift.IntegrationTestSupport;
+import gift.application.member.MemberService;
 import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -30,6 +31,9 @@ class MemberControllerTest extends IntegrationTestSupport {
     @Autowired
     private MemberRepository memberRepository;
 
+    @Autowired
+    private MemberService memberService;
+
     @Nested
     @DisplayName("신규 사용자가 가입할 때")
     class Register {
@@ -49,7 +53,8 @@ class MemberControllerTest extends IntegrationTestSupport {
 
             Optional<Member> saved = memberRepository.findByEmail("register@example.com");
             assertThat(saved).isPresent();
-            assertThat(saved.get().getPassword()).isEqualTo("password1234");
+            assertThat(saved.get().getPassword()).isNotEqualTo("password1234");
+            assertThat(saved.get().getPassword()).isNotBlank();
         }
 
         @Test
@@ -77,7 +82,7 @@ class MemberControllerTest extends IntegrationTestSupport {
         @Test
         @DisplayName("올바른 자격 증명이면 인증 토큰을 받는다")
         void returnsTokenForValidCredentials() throws Exception {
-            memberRepository.save(new Member("login@example.com", "password1234"));
+            memberService.createForAdmin("login@example.com", "password1234");
             String body = """
                 {"email": "login@example.com", "password": "password1234"}
                 """;
@@ -92,7 +97,7 @@ class MemberControllerTest extends IntegrationTestSupport {
         @Test
         @DisplayName("비밀번호가 일치하지 않으면 예외가 발생한다")
         void rejectsInvalidPassword() throws Exception {
-            memberRepository.save(new Member("login@example.com", "password1234"));
+            memberService.createForAdmin("login@example.com", "password1234");
             String body = """
                 {"email": "login@example.com", "password": "wrongpassword"}
                 """;

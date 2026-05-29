@@ -2,6 +2,7 @@ package gift.application.member;
 
 import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
+import gift.domain.member.PasswordEncoder;
 import gift.infrastructure.auth.JwtProvider;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
@@ -16,16 +17,18 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(MemberRepository memberRepository, JwtProvider jwtProvider) {
+    public MemberService(MemberRepository memberRepository, JwtProvider jwtProvider, PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
         this.jwtProvider = jwtProvider;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public String register(String email, String password) {
         ensureEmailNotDuplicated(email);
-        Member member = memberRepository.save(new Member(email, password));
+        Member member = memberRepository.save(new Member(email, passwordEncoder.encode(password)));
         return jwtProvider.createToken(member.getEmail().value());
     }
 
@@ -47,13 +50,13 @@ public class MemberService {
     @Transactional
     public Member createForAdmin(String email, String password) {
         ensureEmailNotDuplicated(email);
-        return memberRepository.save(new Member(email, password));
+        return memberRepository.save(new Member(email, passwordEncoder.encode(password)));
     }
 
     @Transactional
     public Member update(Long id, String email, String password) {
         Member member = findById(id);
-        member.update(email, password);
+        member.update(email, passwordEncoder.encode(password));
         memberRepository.update(member);
         return member;
     }
@@ -83,7 +86,7 @@ public class MemberService {
     }
 
     private void verifyPassword(Member member, String password) {
-        if (member.getPassword() == null || !member.getPassword().equals(password)) {
+        if (!passwordEncoder.matches(password, member.getPassword())) {
             throw new CoreException(ErrorType.INVALID_REQUEST, "이메일 또는 비밀번호가 올바르지 않습니다.");
         }
     }
