@@ -60,7 +60,7 @@ class ProductControllerTest extends IntegrationTestSupport {
             List<Product> all = productRepository.findAll();
             assertThat(all).hasSize(1);
             assertThat(all.get(0).getName().value()).isEqualTo("테스트상품");
-            assertThat(all.get(0).getPrice()).isEqualTo(1000);
+            assertThat(all.get(0).getPrice().value()).isEqualTo(1000);
         }
 
         @Test
@@ -121,7 +121,7 @@ class ProductControllerTest extends IntegrationTestSupport {
             // then
             Product reloaded = productRepository.findById(saved.getId()).orElseThrow();
             assertThat(reloaded.getName().value()).isEqualTo("수정상품");
-            assertThat(reloaded.getPrice()).isEqualTo(2000);
+            assertThat(reloaded.getPrice().value()).isEqualTo(2000);
         }
     }
 

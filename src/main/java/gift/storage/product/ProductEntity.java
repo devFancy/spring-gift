@@ -47,16 +47,16 @@ public class ProductEntity {
     public static ProductEntity from(Product product, CategoryEntity categoryEntity) {
         ProductEntity entity = new ProductEntity();
         entity.name = product.getName().value();
-        entity.price = product.getPrice();
-        entity.imageUrl = product.getImageUrl();
+        entity.price = product.getPrice().value();
+        entity.imageUrl = product.getImageUrl().value();
         entity.category = categoryEntity;
         return entity;
     }
 
     public void update(Product product, CategoryEntity categoryEntity) {
         this.name = product.getName().value();
-        this.price = product.getPrice();
-        this.imageUrl = product.getImageUrl();
+        this.price = product.getPrice().value();
+        this.imageUrl = product.getImageUrl().value();
         this.category = categoryEntity;
     }
 

@@ -53,7 +53,7 @@ class AdminProductControllerTest extends IntegrationTestSupport {
             List<Product> products = productRepository.findAll();
             assertThat(products).hasSize(1);
             assertThat(products.get(0).getName().value()).isEqualTo("운영자상품");
-            assertThat(products.get(0).getPrice()).isEqualTo(1500);
+            assertThat(products.get(0).getPrice().value()).isEqualTo(1500);
         }
     }
 }

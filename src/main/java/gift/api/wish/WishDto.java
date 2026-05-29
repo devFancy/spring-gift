@@ -23,8 +23,8 @@ public final class WishDto {
                 wish.getId(),
                 wish.getProduct().getId(),
                 wish.getProduct().getName().value(),
-                wish.getProduct().getPrice(),
-                wish.getProduct().getImageUrl()
+                wish.getProduct().getPrice().value(),
+                wish.getProduct().getImageUrl().value()
             );
         }
     }

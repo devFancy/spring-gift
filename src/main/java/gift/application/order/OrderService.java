@@ -52,7 +52,7 @@ public class OrderService {
         Member member = findMember(memberId);
         Option option = findOption(optionId);
         option.subtractQuantity(quantity);
-        int totalPrice = option.getProduct().getPrice() * quantity;
+        int totalPrice = option.getProduct().getPrice().value() * quantity;
         member.deductPoint(totalPrice);
         memberRepository.update(member);
         optionRepository.update(option);

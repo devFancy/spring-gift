@@ -1,21 +1,23 @@
 package gift.domain.product;
 
 import gift.domain.category.Category;
+import gift.domain.product.vo.ProductImage;
 import gift.domain.product.vo.ProductName;
+import gift.domain.product.vo.ProductPrice;
 
 public class Product {
 
     private final Long id;
     private ProductName name;
-    private int price;
-    private String imageUrl;
+    private ProductPrice price;
+    private ProductImage imageUrl;
     private Category category;
 
     public Product(Long id, String name, int price, String imageUrl, Category category) {
         this.id = id;
         this.name = new ProductName(name);
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.price = new ProductPrice(price);
+        this.imageUrl = new ProductImage(imageUrl);
         this.category = category;
     }
 
@@ -25,8 +27,8 @@ public class Product {
 
     public void update(String name, int price, String imageUrl, Category category) {
         this.name = new ProductName(name);
-        this.price = price;
-        this.imageUrl = imageUrl;
+        this.price = new ProductPrice(price);
+        this.imageUrl = new ProductImage(imageUrl);
         this.category = category;
     }
 
@@ -38,11 +40,11 @@ public class Product {
         return name;
     }
 
-    public int getPrice() {
+    public ProductPrice getPrice() {
         return price;
     }
 
-    public String getImageUrl() {
+    public ProductImage getImageUrl() {
         return imageUrl;
     }
 

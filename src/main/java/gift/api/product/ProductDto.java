@@ -29,8 +29,8 @@ public final class ProductDto {
             return new Response(
                 product.getId(),
                 product.getName().value(),
-                product.getPrice(),
-                product.getImageUrl(),
+                product.getPrice().value(),
+                product.getImageUrl().value(),
                 product.getCategory().getId()
             );
         }
