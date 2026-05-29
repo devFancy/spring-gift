@@ -38,6 +38,19 @@
 4. ArgumentResolver 는 `api/resolver/` 로 옮긴다.
 5. spring-gift 의 기존 `gift/auth/` 안에 흩어진 카카오 관련 클래스를 위 4개 위치로 분리한다. Java 관용구로 작성한다 (record 또는 일반 클래스, Optional 또는 명시 null 처리).
 
+## 도메인-엔티티 분리 시 (spring-shopping 패턴)
+
+순수 도메인 객체(`domain/`)와 JPA 엔티티(`storage/*Entity`)를 완전히 분리한다.
+
+1. `domain/{domain}/{Domain}.java` - 순수 Java 클래스. JPA/Spring 어노테이션 없음. VO 로 필드 선언.
+2. `domain/{domain}/vo/` - Java `record` 로 작성. compact constructor 에서 검증.
+3. `domain/{domain}/{Domain}Repository.java` - 인터페이스. Spring Data 없음 (Page/Pageable 허용).
+4. `storage/{domain}/{Domain}Entity.java` - `@Entity`. `toDomain()` + `from(domain, ...JpaRepo)` 변환 메서드 보유.
+5. `storage/{domain}/{Domain}JpaRepository.java` - `JpaRepository<*Entity, Long>` 확장.
+6. `storage/{domain}/{Domain}RepositoryImpl.java` - `@Repository`. 도메인 Repository 인터페이스 구현. 연관 엔티티는 JpaRepository 로 조회해 전달.
+
+VO 는 Java `record` 를 사용한다. `equals()`/`hashCode()`/`toString()` 이 자동 제공되며 불변성이 보장된다.
+
 ## 점검 체크리스트 (적용 직후)
 
 - 변경한 클래스가 목표 계층 위치에 있는가.

@@ -35,6 +35,12 @@ spring-gift(Java + Spring Boot) 코드 작성 규칙. 클린 코드 원칙과 �
 - 비즈니스 정책 검증(범위, 단위, 도메인 규칙): `domain/policy/` 의 `*Policy` 에서 전담.
 - Service 에서 검증 로직을 직접 작성하지 않는다.
 
+## 값 객체 (VO)
+
+- VO 는 Java `record` 로 작성한다. `equals()`, `hashCode()`, `toString()` 이 자동 제공되고 불변성이 보장된다.
+- 검증 로직은 compact constructor 안에 작성한다. 생성 시점에 유효하지 않은 값이 도메인으로 들어오지 못하게 막는다.
+- VO 의 접근자는 `value()` 로 통일한다 (record 컴포넌트 이름을 `value` 로 선언).
+
 ## DTO 와 도메인 분리
 
 - 레이어 간 결합을 낮추기 위해 용도별로 DTO 를 분리한다. Create, Update, 조회 목적이 다르면 같은 필드여도 별도 클래스로 정의한다.
