@@ -42,7 +42,7 @@ public class OrderEntity {
         entity.memberId = order.getMemberId();
         entity.quantity = order.getQuantity();
         entity.message = order.getMessage();
-        entity.orderDateTime = LocalDateTime.now();
+        entity.orderDateTime = order.getOrderDateTime();
         return entity;
     }
 

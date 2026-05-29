@@ -22,8 +22,8 @@ public class Order {
         this.orderDateTime = orderDateTime;
     }
 
-    public Order(Option option, Long memberId, int quantity, String message) {
-        this(null, option, memberId, quantity, message, LocalDateTime.now());
+    public Order(Option option, Long memberId, int quantity, String message, LocalDateTime orderDateTime) {
+        this(null, option, memberId, quantity, message, orderDateTime);
     }
 
     public Long getId() {

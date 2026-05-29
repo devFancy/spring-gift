@@ -7,6 +7,7 @@ import gift.domain.option.OptionRepository;
 import gift.domain.order.Order;
 import gift.domain.order.OrderRepository;
 import gift.infrastructure.oauth.client.KakaoMessageClient;
+import gift.support.ClockHolder;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.data.domain.Page;
@@ -22,17 +23,20 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final MemberRepository memberRepository;
     private final KakaoMessageClient kakaoMessageClient;
+    private final ClockHolder clockHolder;
 
     public OrderService(
         OrderRepository orderRepository,
         OptionRepository optionRepository,
         MemberRepository memberRepository,
-        KakaoMessageClient kakaoMessageClient
+        KakaoMessageClient kakaoMessageClient,
+        ClockHolder clockHolder
     ) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
         this.kakaoMessageClient = kakaoMessageClient;
+        this.clockHolder = clockHolder;
     }
 
     public Page<Order> findByMember(Long memberId, Pageable pageable) {
@@ -48,7 +52,7 @@ public class OrderService {
         member.deductPoint(totalPrice);
         memberRepository.update(member);
         optionRepository.update(option);
-        Order saved = orderRepository.save(new Order(option, member.getId(), quantity, message));
+        Order saved = orderRepository.save(new Order(option, member.getId(), quantity, message, clockHolder.now()));
         notifyKakao(member, saved, option);
         return saved;
     }

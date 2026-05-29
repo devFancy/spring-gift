@@ -13,6 +13,7 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.infrastructure.auth.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,8 +135,8 @@ class OrderControllerTest extends IntegrationTestSupport {
             // given
             Member member = saveMemberWithPoint("buyer@example.com", 100_000);
             Option option = saveOption(2_000, 10);
-            orderRepository.save(new Order(option, member.getId(), 1, "m1"));
-            orderRepository.save(new Order(option, member.getId(), 2, "m2"));
+            orderRepository.save(new Order(option, member.getId(), 1, "m1", LocalDateTime.now()));
+            orderRepository.save(new Order(option, member.getId(), 2, "m2", LocalDateTime.now()));
             String token = jwtProvider.createToken(member.getEmail().value());
 
             // when, then
