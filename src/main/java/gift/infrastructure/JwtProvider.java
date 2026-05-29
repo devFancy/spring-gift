@@ -1,6 +1,6 @@
-package gift.infrastructure.auth;
+package gift.infrastructure;
 
-import gift.config.jwt.JwtProperties;
+import gift.config.JwtProperties;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;

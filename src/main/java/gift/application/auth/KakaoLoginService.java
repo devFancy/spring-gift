@@ -2,7 +2,7 @@ package gift.application.auth;
 
 import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
-import gift.infrastructure.auth.JwtProvider;
+import gift.infrastructure.JwtProvider;
 import gift.infrastructure.oauth.client.KakaoLoginClient;
 import gift.infrastructure.oauth.dto.KakaoTokenResponse;
 import gift.infrastructure.oauth.dto.KakaoUserResponse;

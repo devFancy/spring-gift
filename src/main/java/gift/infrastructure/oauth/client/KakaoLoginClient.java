@@ -1,6 +1,6 @@
 package gift.infrastructure.oauth.client;
 
-import gift.config.kakao.KakaoLoginProperties;
+import gift.config.KakaoLoginProperties;
 import gift.infrastructure.oauth.dto.KakaoTokenResponse;
 import gift.infrastructure.oauth.dto.KakaoUserResponse;
 import org.springframework.stereotype.Component;

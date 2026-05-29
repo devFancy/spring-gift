@@ -3,7 +3,7 @@ package gift.application.member;
 import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
 import gift.domain.member.PasswordEncoder;
-import gift.infrastructure.auth.JwtProvider;
+import gift.infrastructure.JwtProvider;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.stereotype.Service;

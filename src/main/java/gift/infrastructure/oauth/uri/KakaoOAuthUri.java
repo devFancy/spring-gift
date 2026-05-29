@@ -1,6 +1,6 @@
 package gift.infrastructure.oauth.uri;
 
-import gift.config.kakao.KakaoLoginProperties;
+import gift.config.KakaoLoginProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 

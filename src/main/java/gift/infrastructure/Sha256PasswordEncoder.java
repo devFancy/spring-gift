@@ -1,4 +1,4 @@
-package gift.infrastructure.security;
+package gift.infrastructure;
 
 import gift.domain.member.PasswordEncoder;
 import gift.support.error.CoreException;

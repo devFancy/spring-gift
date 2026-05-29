@@ -1,4 +1,4 @@
-package gift.infrastructure.time;
+package gift.infrastructure;
 
 import gift.support.ClockHolder;
 import org.springframework.stereotype.Component;

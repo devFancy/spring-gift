@@ -11,7 +11,7 @@ import gift.domain.order.Order;
 import gift.domain.order.OrderRepository;
 import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
-import gift.infrastructure.auth.JwtProvider;
+import gift.infrastructure.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Nested;

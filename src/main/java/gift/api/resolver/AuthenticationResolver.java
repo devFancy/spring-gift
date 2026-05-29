@@ -2,7 +2,7 @@ package gift.api.resolver;
 
 import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
-import gift.infrastructure.auth.JwtProvider;
+import gift.infrastructure.JwtProvider;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.stereotype.Component;

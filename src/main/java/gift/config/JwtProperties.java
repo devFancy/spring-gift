@@ -1,4 +1,4 @@
-package gift.config.jwt;
+package gift.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

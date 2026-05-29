@@ -9,7 +9,7 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.domain.wish.Wish;
 import gift.domain.wish.WishRepository;
-import gift.infrastructure.auth.JwtProvider;
+import gift.infrastructure.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
