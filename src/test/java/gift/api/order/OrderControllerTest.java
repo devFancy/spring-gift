@@ -76,7 +76,7 @@ class OrderControllerTest extends IntegrationTestSupport {
 
             // then
             Option reloadedOption = optionRepository.findById(option.getId()).orElseThrow();
-            assertThat(reloadedOption.getQuantity()).isEqualTo(7);
+            assertThat(reloadedOption.getQuantity().value()).isEqualTo(7);
 
             Member reloadedMember = memberRepository.findById(member.getId()).orElseThrow();
             assertThat(reloadedMember.getPoint()).isEqualTo(100_000 - 2_000 * 3);

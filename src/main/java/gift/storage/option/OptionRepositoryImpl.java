@@ -58,7 +58,7 @@ public class OptionRepositoryImpl implements OptionRepository {
     @Override
     public void update(Option option) {
         optionJpaRepository.findById(option.getId())
-            .ifPresent(entity -> entity.updateQuantity(option.getQuantity()));
+            .ifPresent(entity -> entity.updateQuantity(option.getQuantity().value()));
     }
 
     private ProductEntity findProductEntity(Long productId) {

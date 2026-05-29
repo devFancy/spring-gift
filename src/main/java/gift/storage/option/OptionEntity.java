@@ -40,7 +40,7 @@ public class OptionEntity {
         OptionEntity entity = new OptionEntity();
         entity.product = productEntity;
         entity.name = option.getName().value();
-        entity.quantity = option.getQuantity();
+        entity.quantity = option.getQuantity().value();
         return entity;
     }
 

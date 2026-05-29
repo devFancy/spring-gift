@@ -22,7 +22,7 @@ public final class OptionDto {
         int quantity
     ) {
         public static Response from(Option option) {
-            return new Response(option.getId(), option.getName().value(), option.getQuantity());
+            return new Response(option.getId(), option.getName().value(), option.getQuantity().value());
         }
     }
 }
