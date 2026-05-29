@@ -40,33 +40,38 @@ src/main/java/gift/
 
 특징: Service 계층 0개. Controller 가 Repository 를 직접 호출하고, 외부 클라이언트와 도메인이 한 패키지에 섞여 있다.
 
-### 목표 구조 (Spring Boot 6계층 분리)
+### 현재 구조 (리팩터링 완료 기준)
 
 ```text
 src/main/java/gift/
 ├── Application.java
 ├── api/                  # 웹 계층 (*Controller, Request/Response DTO)
-│   ├── resolver/         # ArgumentResolver
-│   └── validator/        # 형식 검증 (길이, null, 형식)
+│   └── resolver/         # ArgumentResolver
 ├── application/          # 응용 계층 (*Service - 트랜잭션 경계, 유스케이스 진입점)
-├── domain/               # 도메인 (모델, *Policy, VO. 프레임워크 의존 금지)
-│   └── policy/           # 비즈니스 규칙 전담 (범위 검증, 단위 계산)
+│   └── {domain}/         # 도메인별 하위 패키지 (예: application/product/ProductService)
+├── domain/               # 순수 도메인 (JPA/Spring 어노테이션 금지)
+│   └── {domain}/
+│       ├── vo/           # 값 객체 (생성자에서 형식 검증. 예: ProductName, Email)
+│       └── policy/       # 명시적 비즈니스 정책 (복잡하거나 재사용되는 규칙만)
 ├── infrastructure/       # 외부 시스템 통신
-│   ├── auth/             # 토큰 발급/검증 구현체 (*Provider)
+│   ├── *Provider         # 토큰 발급/검증 (JwtProvider)
+│   ├── *PasswordEncoder  # 보안 구현체
+│   ├── *ClockHolder      # 시간 추상화 구현체
 │   └── oauth/            # 카카오 OAuth/메시지 영역
-│       ├── client/       # 외부 API 호출 (*Client)
-│       ├── dto/          # 외부 API 응답 매핑 record
-│       └── uri/          # 외부 진입 URL 조립 (*Uri)
-├── storage/              # 영속성 (JPA Entity, *Repository 인터페이스/구현)
-├── support/              # 전역 예외, 공통 응답 포맷, *ErrorType enum
-└── config/
-    └── kakao/            # 카카오 설정 (*Properties)
+│       ├── client/
+│       ├── dto/
+│       └── uri/
+├── storage/              # 영속성 (JPA *Entity, *JpaRepository, *RepositoryImpl)
+│   └── {domain}/         # 도메인별 하위 패키지
+├── support/              # 전역 예외, 공통 응답, ClockHolder 인터페이스
+└── config/               # 설정 (*Properties 직접 배치)
 ```
 
-- 각 도메인(auth/category/member/option/order/product/wish)은 위 계층 안에서 하위 패키지로 더 나뉜다. 예: `application/product/ProductService`, `domain/product/Product`.
-- 트랜잭션 기본값: Service 클래스 상단에 `@Transactional(readOnly = true)` 선언, CUD 메서드에만 `@Transactional` 을 명시한다.
-- DTO 는 도메인별로 하나의 `*Dto.java` 파일에 Request/Response 정적 중첩 클래스로 모은다.
-- 형식 검증은 `api/validator/` 에서, 비즈니스 정책 검증은 `domain/policy/` 에서 전담한다. Service 에서 검증 로직을 직접 작성하지 않는다.
+- 도메인 객체(`domain/`)와 JPA 엔티티(`storage/*Entity`)를 완전히 분리한다. 도메인 Repository 인터페이스는 `domain/`에, 구현체(`*RepositoryImpl`)는 `storage/`에 둔다.
+- 형식 검증은 VO 생성자 안에서 수행한다. `api/validator/` 를 별도로 두지 않는다.
+- 비즈니스 정책은 복잡하거나 여러 Service 에서 재사용될 때만 `domain/{domain}/policy/*Policy` 로 분리한다. 단순 boolean 체크는 Service 에 직접 작성한다.
+- 트랜잭션 기본값: Service 클래스 상단 `@Transactional(readOnly = true)`, CUD 메서드에만 `@Transactional` 명시.
+- DTO 는 도메인별 단일 `*Dto.java` 파일에 Request/Response 정적 중첩 클래스로 모은다.
 
 ---
 
