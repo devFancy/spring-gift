@@ -10,6 +10,7 @@ import gift.domain.product.ProductRepository;
 import gift.domain.wish.Wish;
 import gift.domain.wish.WishRepository;
 import gift.infrastructure.JwtProvider;
+import gift.storage.wish.WishJpaRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -37,6 +36,9 @@ class WishControllerTest extends IntegrationTestSupport {
 
     @Autowired
     private WishRepository wishRepository;
+
+    @Autowired
+    private WishJpaRepository wishJpaRepository;
 
     @Autowired
     private ProductRepository productRepository;
@@ -74,7 +76,7 @@ class WishControllerTest extends IntegrationTestSupport {
                 .andDo(document("v1/wishes/add"));
 
             // then
-            List<Wish> wishes = wishRepository.findAll();
+            var wishes = wishJpaRepository.findAll();
             assertThat(wishes).hasSize(1);
             assertThat(wishes.get(0).getMemberId()).isEqualTo(member.getId());
         }
@@ -94,7 +96,7 @@ class WishControllerTest extends IntegrationTestSupport {
                 .andExpect(status().isUnauthorized())
                 .andDo(document("v1/wishes/add-rejected-unauthorized"));
 
-            assertThat(wishRepository.count()).isZero();
+            assertThat(wishJpaRepository.count()).isZero();
         }
     }
 

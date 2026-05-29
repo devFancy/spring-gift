@@ -16,8 +16,4 @@ public interface WishRepository {
     Optional<Wish> findByMemberIdAndProductId(Long memberId, Long productId);
 
     void delete(Wish wish);
-
-    long count();
-
-    java.util.List<Wish> findAll();
 }

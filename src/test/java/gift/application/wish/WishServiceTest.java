@@ -9,6 +9,7 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.domain.wish.Wish;
 import gift.domain.wish.WishRepository;
+import gift.storage.wish.WishJpaRepository;
 import gift.support.error.CoreException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,6 +27,9 @@ class WishServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private WishRepository wishRepository;
+
+    @Autowired
+    private WishJpaRepository wishJpaRepository;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -53,7 +57,7 @@ class WishServiceTest extends IntegrationTestSupport {
 
             // then
             assertThat(second.getId()).isEqualTo(first.getId());
-            assertThat(wishRepository.findAll()).hasSize(1);
+            assertThat(wishJpaRepository.count()).isEqualTo(1);
         }
 
         @Test

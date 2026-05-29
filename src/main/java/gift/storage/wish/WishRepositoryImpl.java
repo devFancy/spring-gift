@@ -10,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -55,18 +54,6 @@ public class WishRepositoryImpl implements WishRepository {
     public void delete(Wish wish) {
         wishJpaRepository.findById(wish.getId())
             .ifPresent(wishJpaRepository::delete);
-    }
-
-    @Override
-    public long count() {
-        return wishJpaRepository.count();
-    }
-
-    @Override
-    public List<Wish> findAll() {
-        return wishJpaRepository.findAll().stream()
-            .map(WishEntity::toDomain)
-            .toList();
     }
 
     private ProductEntity findProductEntity(Long productId) {

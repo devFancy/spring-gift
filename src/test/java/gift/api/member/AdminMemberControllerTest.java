@@ -32,8 +32,8 @@ class AdminMemberControllerTest extends IntegrationTestSupport {
     class CreateForm {
 
         @Test
-        @DisplayName("이메일과 비밀번호 폼 필드가 record 로 자동 binding 되어 회원이 저장된다")
-        void recordAutoBindingCreatesMember() throws Exception {
+        @DisplayName("운영자가 이메일과 비밀번호를 입력해 회원을 등록하면 저장된다")
+        void savesWhenValidInputProvided() throws Exception {
             // when
             mockMvc.perform(post("/admin/members")
                     .param("email", "admin-user@example.com")

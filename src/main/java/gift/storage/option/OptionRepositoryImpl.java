@@ -56,11 +56,6 @@ public class OptionRepositoryImpl implements OptionRepository {
     }
 
     @Override
-    public boolean existsById(Long id) {
-        return optionJpaRepository.existsById(id);
-    }
-
-    @Override
     public void update(Option option) {
         optionJpaRepository.findById(option.getId())
             .ifPresent(entity -> entity.updateQuantity(option.getQuantity()));

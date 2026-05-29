@@ -15,7 +15,5 @@ public interface OptionRepository {
 
     void delete(Option option);
 
-    boolean existsById(Long id);
-
     void update(Option option);
 }

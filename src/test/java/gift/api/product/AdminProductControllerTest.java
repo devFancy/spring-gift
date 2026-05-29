@@ -37,8 +37,8 @@ class AdminProductControllerTest extends IntegrationTestSupport {
     class CreateForm {
 
         @Test
-        @DisplayName("네 개의 폼 필드가 record 로 자동 binding 되어 상품이 저장된다")
-        void recordAutoBindingCreatesProduct() throws Exception {
+        @DisplayName("운영자가 상품 정보를 입력해 등록하면 상품 카탈로그에 저장된다")
+        void savesToCatalog() throws Exception {
             // given
             Category category = categoryRepository.save(new Category("전자기기", "#000000", "img", "설명"));
 
