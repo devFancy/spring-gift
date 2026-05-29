@@ -1,11 +1,10 @@
 package gift.application.product;
 
-import gift.api.validator.product.ProductNameFormatValidator;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
 import gift.domain.product.policy.ProductNamePolicy;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.data.domain.Page;
@@ -42,28 +41,24 @@ public class ProductService {
 
     @Transactional
     public Product create(String name, int price, String imageUrl, Long categoryId, boolean allowKakaoInName) {
-        validateName(name, allowKakaoInName);
+        ProductNamePolicy.validateKakaoUsage(name, allowKakaoInName);
         Category category = findCategory(categoryId);
         return productRepository.save(new Product(name, price, imageUrl, category));
     }
 
     @Transactional
     public Product update(Long id, String name, int price, String imageUrl, Long categoryId, boolean allowKakaoInName) {
-        validateName(name, allowKakaoInName);
+        ProductNamePolicy.validateKakaoUsage(name, allowKakaoInName);
         Product product = findById(id);
         Category category = findCategory(categoryId);
         product.update(name, price, imageUrl, category);
-        return productRepository.save(product);
+        productRepository.update(product);
+        return product;
     }
 
     @Transactional
     public void delete(Long id) {
         productRepository.deleteById(id);
-    }
-
-    private void validateName(String name, boolean allowKakao) {
-        ProductNameFormatValidator.validate(name);
-        ProductNamePolicy.validateKakaoUsage(name, allowKakao);
     }
 
     private Category findCategory(Long categoryId) {

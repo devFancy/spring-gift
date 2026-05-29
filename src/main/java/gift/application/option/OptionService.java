@@ -1,11 +1,9 @@
 package gift.application.option;
 
-import gift.api.validator.option.OptionNameFormatValidator;
-import gift.domain.option.policy.OptionPolicy;
-import gift.storage.option.Option;
-import gift.storage.option.OptionRepository;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
+import gift.domain.option.Option;
+import gift.domain.option.OptionRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.stereotype.Service;
@@ -32,16 +30,15 @@ public class OptionService {
 
     @Transactional
     public Option register(Long productId, String name, int quantity) {
-        OptionNameFormatValidator.validate(name);
         Product product = findProduct(productId);
-        OptionPolicy.ensureNameNotDuplicated(optionRepository.existsByProductIdAndName(productId, name));
+        ensureNameNotDuplicated(productId, name);
         return optionRepository.save(new Option(product, name, quantity));
     }
 
     @Transactional
     public void remove(Long productId, Long optionId) {
         ensureProductExists(productId);
-        OptionPolicy.ensureNotLastOption(optionRepository.findByProductId(productId).size());
+        ensureNotLastOption(productId);
         Option option = findOptionInProduct(productId, optionId);
         optionRepository.delete(option);
     }
@@ -52,8 +49,20 @@ public class OptionService {
     }
 
     private void ensureProductExists(Long productId) {
-        if (!productRepository.existsById(productId)) {
+        if (productRepository.findById(productId).isEmpty()) {
             throw new CoreException(ErrorType.NOT_FOUND, "상품을 찾을 수 없습니다.");
+        }
+    }
+
+    private void ensureNameNotDuplicated(Long productId, String name) {
+        if (optionRepository.existsByProductIdAndName(productId, name)) {
+            throw new CoreException(ErrorType.INVALID_REQUEST, "이미 존재하는 옵션명입니다.");
+        }
+    }
+
+    private void ensureNotLastOption(Long productId) {
+        if (optionRepository.findByProductId(productId).size() <= 1) {
+            throw new CoreException(ErrorType.INVALID_REQUEST, "옵션이 1개인 상품은 옵션을 삭제할 수 없습니다.");
         }
     }
 

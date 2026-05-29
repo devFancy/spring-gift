@@ -1,9 +1,9 @@
 package gift.application.wish;
 
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
-import gift.storage.wish.Wish;
-import gift.storage.wish.WishRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
+import gift.domain.wish.Wish;
+import gift.domain.wish.WishRepository;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.data.domain.Page;

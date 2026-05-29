@@ -2,7 +2,7 @@ package gift.api.product;
 
 import gift.application.category.CategoryService;
 import gift.application.product.ProductService;
-import gift.storage.product.Product;
+import gift.domain.product.Product;
 import gift.support.error.CoreException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

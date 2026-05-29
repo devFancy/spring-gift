@@ -1,9 +1,8 @@
 package gift.application.member;
 
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
 import gift.infrastructure.auth.JwtProvider;
-import gift.domain.member.policy.MemberEmailPolicy;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.stereotype.Service;
@@ -25,15 +24,15 @@ public class MemberService {
 
     @Transactional
     public String register(String email, String password) {
-        MemberEmailPolicy.ensureNotDuplicated(memberRepository.existsByEmail(email));
+        ensureEmailNotDuplicated(email);
         Member member = memberRepository.save(new Member(email, password));
-        return jwtProvider.createToken(member.getEmail());
+        return jwtProvider.createToken(member.getEmail().value());
     }
 
     public String login(String email, String password) {
         Member member = findByEmail(email);
         verifyPassword(member, password);
-        return jwtProvider.createToken(member.getEmail());
+        return jwtProvider.createToken(member.getEmail().value());
     }
 
     public Member findById(Long id) {
@@ -47,7 +46,7 @@ public class MemberService {
 
     @Transactional
     public Member createForAdmin(String email, String password) {
-        MemberEmailPolicy.ensureNotDuplicated(memberRepository.existsByEmail(email));
+        ensureEmailNotDuplicated(email);
         return memberRepository.save(new Member(email, password));
     }
 
@@ -55,19 +54,27 @@ public class MemberService {
     public Member update(Long id, String email, String password) {
         Member member = findById(id);
         member.update(email, password);
-        return memberRepository.save(member);
+        memberRepository.update(member);
+        return member;
     }
 
     @Transactional
     public Member chargePoint(Long id, int amount) {
         Member member = findById(id);
         member.chargePoint(amount);
-        return memberRepository.save(member);
+        memberRepository.update(member);
+        return member;
     }
 
     @Transactional
     public void delete(Long id) {
         memberRepository.deleteById(id);
+    }
+
+    private void ensureEmailNotDuplicated(String email) {
+        if (memberRepository.existsByEmail(email)) {
+            throw new CoreException(ErrorType.INVALID_REQUEST, "이미 가입된 이메일입니다.");
+        }
     }
 
     private Member findByEmail(String email) {

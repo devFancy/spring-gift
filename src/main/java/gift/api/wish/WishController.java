@@ -1,9 +1,9 @@
 package gift.api.wish;
 
-import gift.application.wish.WishService;
 import gift.api.resolver.AuthenticationResolver;
-import gift.storage.member.Member;
-import gift.storage.wish.Wish;
+import gift.application.wish.WishService;
+import gift.domain.member.Member;
+import gift.domain.wish.Wish;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -64,5 +64,4 @@ public class WishController {
         wishService.remove(member.getId(), id);
         return ResponseEntity.noContent().build();
     }
-
 }

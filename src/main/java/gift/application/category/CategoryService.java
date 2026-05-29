@@ -1,7 +1,7 @@
 package gift.application.category;
 
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.stereotype.Service;
@@ -37,7 +37,8 @@ public class CategoryService {
     public Category update(Long id, String name, String color, String imageUrl, String description) {
         Category category = findById(id);
         category.update(name, color, imageUrl, description);
-        return categoryRepository.save(category);
+        categoryRepository.update(category);
+        return category;
     }
 
     @Transactional

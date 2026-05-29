@@ -1,15 +1,15 @@
 package gift.api.wish;
 
 import gift.IntegrationTestSupport;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
+import gift.domain.wish.Wish;
+import gift.domain.wish.WishRepository;
 import gift.infrastructure.auth.JwtProvider;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
-import gift.storage.wish.Wish;
-import gift.storage.wish.WishRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -60,7 +60,7 @@ class WishControllerTest extends IntegrationTestSupport {
             // given
             Member member = memberRepository.save(new Member("user@example.com", "password"));
             Product product = saveProduct();
-            String token = jwtProvider.createToken(member.getEmail());
+            String token = jwtProvider.createToken(member.getEmail().value());
             String body = """
                 {"productId": %d}
                 """.formatted(product.getId());
@@ -108,7 +108,7 @@ class WishControllerTest extends IntegrationTestSupport {
             Member member = memberRepository.save(new Member("user@example.com", "password"));
             Product product = saveProduct();
             Wish wish = wishRepository.save(new Wish(member.getId(), product));
-            String token = jwtProvider.createToken(member.getEmail());
+            String token = jwtProvider.createToken(member.getEmail().value());
 
             mockMvc.perform(delete("/api/v1/wishes/{id}", wish.getId())
                     .header("Authorization", "Bearer " + token))
@@ -125,7 +125,7 @@ class WishControllerTest extends IntegrationTestSupport {
             Member other = memberRepository.save(new Member("other@example.com", "pw"));
             Product product = saveProduct();
             Wish wish = wishRepository.save(new Wish(owner.getId(), product));
-            String otherToken = jwtProvider.createToken(other.getEmail());
+            String otherToken = jwtProvider.createToken(other.getEmail().value());
 
             mockMvc.perform(delete("/api/v1/wishes/{id}", wish.getId())
                     .header("Authorization", "Bearer " + otherToken))

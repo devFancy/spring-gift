@@ -1,8 +1,8 @@
 package gift.api.category;
 
 import gift.IntegrationTestSupport;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

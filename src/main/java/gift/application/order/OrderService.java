@@ -1,12 +1,12 @@
 package gift.application.order;
 
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
+import gift.domain.option.Option;
+import gift.domain.option.OptionRepository;
+import gift.domain.order.Order;
+import gift.domain.order.OrderRepository;
 import gift.infrastructure.oauth.client.KakaoMessageClient;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
-import gift.storage.option.Option;
-import gift.storage.option.OptionRepository;
-import gift.storage.order.Order;
-import gift.storage.order.OrderRepository;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.data.domain.Page;
@@ -46,6 +46,8 @@ public class OrderService {
         option.subtractQuantity(quantity);
         int totalPrice = option.getProduct().getPrice() * quantity;
         member.deductPoint(totalPrice);
+        memberRepository.update(member);
+        optionRepository.update(option);
         Order saved = orderRepository.save(new Order(option, member.getId(), quantity, message));
         notifyKakao(member, saved, option);
         return saved;

@@ -1,6 +1,6 @@
 package gift.api.category;
 
-import gift.storage.category.Category;
+import gift.domain.category.Category;
 import jakarta.validation.constraints.NotBlank;
 
 public final class CategoryDto {

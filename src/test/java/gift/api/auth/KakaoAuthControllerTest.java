@@ -1,11 +1,11 @@
 package gift.api.auth;
 
 import gift.IntegrationTestSupport;
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
 import gift.infrastructure.oauth.client.KakaoLoginClient;
 import gift.infrastructure.oauth.dto.KakaoTokenResponse;
 import gift.infrastructure.oauth.dto.KakaoUserResponse;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

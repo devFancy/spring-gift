@@ -1,11 +1,11 @@
 package gift.application.auth;
 
 import gift.IntegrationTestSupport;
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
 import gift.infrastructure.oauth.client.KakaoLoginClient;
 import gift.infrastructure.oauth.dto.KakaoTokenResponse;
 import gift.infrastructure.oauth.dto.KakaoUserResponse;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -53,7 +53,7 @@ class KakaoLoginServiceTest extends IntegrationTestSupport {
             List<Member> members = memberRepository.findAll();
             assertThat(members).hasSize(1);
             Member onlyMember = members.get(0);
-            assertThat(onlyMember.getEmail()).isEqualTo(email);
+            assertThat(onlyMember.getEmail().value()).isEqualTo(email);
             assertThat(onlyMember.getKakaoAccessToken()).isEqualTo("second-token");
         }
     }

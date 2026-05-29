@@ -1,8 +1,8 @@
 package gift.api.member;
 
 import gift.IntegrationTestSupport;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,7 +66,7 @@ class MemberControllerTest extends IntegrationTestSupport {
                 .andExpect(status().isBadRequest())
                 .andDo(document("v1/members/register-rejected-duplicate"));
 
-            assertThat(memberRepository.count()).isEqualTo(1L);
+            assertThat(memberRepository.findAll()).hasSize(1);
         }
     }
 

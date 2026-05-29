@@ -1,7 +1,7 @@
 package gift.api.product;
 
 import gift.application.product.ProductService;
-import gift.storage.product.Product;
+import gift.domain.product.Product;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;

@@ -1,12 +1,12 @@
 package gift.api.option;
 
 import gift.IntegrationTestSupport;
-import gift.storage.option.Option;
-import gift.storage.option.OptionRepository;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
+import gift.domain.option.Option;
+import gift.domain.option.OptionRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -65,7 +65,7 @@ class OptionControllerTest extends IntegrationTestSupport {
             // then
             List<Option> options = optionRepository.findByProductId(product.getId());
             assertThat(options).hasSize(1);
-            assertThat(options.get(0).getName()).isEqualTo("옵션A");
+            assertThat(options.get(0).getName().value()).isEqualTo("옵션A");
         }
 
         @Test

@@ -1,10 +1,10 @@
 package gift.api.product;
 
 import gift.IntegrationTestSupport;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -54,7 +54,7 @@ class AdminProductControllerTest extends IntegrationTestSupport {
             // then
             List<Product> products = productRepository.findAll();
             assertThat(products).hasSize(1);
-            assertThat(products.get(0).getName()).isEqualTo("운영자상품");
+            assertThat(products.get(0).getName().value()).isEqualTo("운영자상품");
             assertThat(products.get(0).getPrice()).isEqualTo(1500);
         }
     }

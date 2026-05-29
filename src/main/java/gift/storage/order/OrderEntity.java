@@ -1,6 +1,7 @@
 package gift.storage.order;
 
-import gift.storage.option.Option;
+import gift.domain.order.Order;
+import gift.storage.option.OptionEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,36 +14,43 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class OrderEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "option_id")
-    private Option option;
-    // primitive FK
+    private OptionEntity option;
+
     private Long memberId;
     private int quantity;
     private String message;
     private LocalDateTime orderDateTime;
 
-    protected Order() {
+    protected OrderEntity() {
     }
 
-    public Order(Option option, Long memberId, int quantity, String message) {
-        this.option = option;
-        this.memberId = memberId;
-        this.quantity = quantity;
-        this.message = message;
-        this.orderDateTime = LocalDateTime.now();
+    public Order toDomain() {
+        return new Order(id, option.toDomain(), memberId, quantity, message, orderDateTime);
+    }
+
+    public static OrderEntity from(Order order, OptionEntity optionEntity) {
+        OrderEntity entity = new OrderEntity();
+        entity.option = optionEntity;
+        entity.memberId = order.getMemberId();
+        entity.quantity = order.getQuantity();
+        entity.message = order.getMessage();
+        entity.orderDateTime = LocalDateTime.now();
+        return entity;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Option getOption() {
+    public OptionEntity getOption() {
         return option;
     }
 

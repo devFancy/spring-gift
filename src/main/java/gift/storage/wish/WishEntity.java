@@ -1,15 +1,18 @@
 package gift.storage.wish;
 
-import gift.storage.product.Product;
+import gift.domain.wish.Wish;
+import gift.storage.product.ProductEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
-public class Wish {
+@Table(name = "wish")
+public class WishEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,14 +22,20 @@ public class Wish {
 
     @ManyToOne
     @JoinColumn(name = "product_id")
-    private Product product;
+    private ProductEntity product;
 
-    protected Wish() {
+    protected WishEntity() {
     }
 
-    public Wish(Long memberId, Product product) {
-        this.memberId = memberId;
-        this.product = product;
+    public Wish toDomain() {
+        return new Wish(id, memberId, product.toDomain());
+    }
+
+    public static WishEntity from(Wish wish, ProductEntity productEntity) {
+        WishEntity entity = new WishEntity();
+        entity.memberId = wish.getMemberId();
+        entity.product = productEntity;
+        return entity;
     }
 
     public Long getId() {
@@ -37,7 +46,7 @@ public class Wish {
         return memberId;
     }
 
-    public Product getProduct() {
+    public ProductEntity getProduct() {
         return product;
     }
 }

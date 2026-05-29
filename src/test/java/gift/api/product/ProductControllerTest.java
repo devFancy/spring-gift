@@ -1,10 +1,10 @@
 package gift.api.product;
 
 import gift.IntegrationTestSupport;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ class ProductControllerTest extends IntegrationTestSupport {
             // then
             List<Product> all = productRepository.findAll();
             assertThat(all).hasSize(1);
-            assertThat(all.get(0).getName()).isEqualTo("테스트상품");
+            assertThat(all.get(0).getName().value()).isEqualTo("테스트상품");
             assertThat(all.get(0).getPrice()).isEqualTo(1000);
         }
 
@@ -82,7 +82,7 @@ class ProductControllerTest extends IntegrationTestSupport {
                 .andDo(document("v1/products/register-rejected-kakao"));
 
             // then
-            assertThat(productRepository.count()).isZero();
+            assertThat(productRepository.findAll()).isEmpty();
         }
     }
 
@@ -122,7 +122,7 @@ class ProductControllerTest extends IntegrationTestSupport {
 
             // then
             Product reloaded = productRepository.findById(saved.getId()).orElseThrow();
-            assertThat(reloaded.getName()).isEqualTo("수정상품");
+            assertThat(reloaded.getName().value()).isEqualTo("수정상품");
             assertThat(reloaded.getPrice()).isEqualTo(2000);
         }
     }

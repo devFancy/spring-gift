@@ -1,6 +1,6 @@
 package gift.api.wish;
 
-import gift.storage.wish.Wish;
+import gift.domain.wish.Wish;
 import jakarta.validation.constraints.NotNull;
 
 public final class WishDto {
@@ -22,7 +22,7 @@ public final class WishDto {
             return new Response(
                 wish.getId(),
                 wish.getProduct().getId(),
-                wish.getProduct().getName(),
+                wish.getProduct().getName().value(),
                 wish.getProduct().getPrice(),
                 wish.getProduct().getImageUrl()
             );

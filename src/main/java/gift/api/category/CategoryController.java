@@ -1,7 +1,7 @@
 package gift.api.category;
 
 import gift.application.category.CategoryService;
-import gift.storage.category.Category;
+import gift.domain.category.Category;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

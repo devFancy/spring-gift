@@ -1,8 +1,8 @@
 package gift.application.member;
 
 import gift.IntegrationTestSupport;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
 import gift.support.error.CoreException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -33,7 +33,7 @@ class MemberServiceTest extends IntegrationTestSupport {
 
             // then
             assertThat(memberRepository.findById(saved.getId())).isPresent();
-            assertThat(saved.getEmail()).isEqualTo("admin@example.com");
+            assertThat(saved.getEmail().value()).isEqualTo("admin@example.com");
         }
     }
 

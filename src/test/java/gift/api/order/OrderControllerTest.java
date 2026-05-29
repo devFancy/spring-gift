@@ -1,22 +1,23 @@
 package gift.api.order;
 
 import gift.IntegrationTestSupport;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
+import gift.domain.option.Option;
+import gift.domain.option.OptionRepository;
+import gift.domain.order.Order;
+import gift.domain.order.OrderRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
 import gift.infrastructure.auth.JwtProvider;
-import gift.storage.order.Order;
-import gift.storage.order.OrderRepository;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
-import gift.storage.option.Option;
-import gift.storage.option.OptionRepository;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -62,7 +63,7 @@ class OrderControllerTest extends IntegrationTestSupport {
             // given
             Member member = saveMemberWithPoint("buyer@example.com", 100_000);
             Option option = saveOption(2_000, 10);
-            String token = jwtProvider.createToken(member.getEmail());
+            String token = jwtProvider.createToken(member.getEmail().value());
             String body = """
                 {"optionId": %d, "quantity": 3, "message": "선물입니다"}
                 """.formatted(option.getId());
@@ -81,7 +82,7 @@ class OrderControllerTest extends IntegrationTestSupport {
             Member reloadedMember = memberRepository.findById(member.getId()).orElseThrow();
             assertThat(reloadedMember.getPoint()).isEqualTo(100_000 - 2_000 * 3);
 
-            List<Order> orders = orderRepository.findAll();
+            List<Order> orders = orderRepository.findByMemberId(member.getId(), PageRequest.of(0, 100)).getContent();
             assertThat(orders).hasSize(1);
             assertThat(orders.get(0).getQuantity()).isEqualTo(3);
             assertThat(orders.get(0).getMemberId()).isEqualTo(member.getId());
@@ -102,9 +103,6 @@ class OrderControllerTest extends IntegrationTestSupport {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(body))
                 .andExpect(status().isUnauthorized());
-
-            // then
-            assertThat(orderRepository.count()).isZero();
         }
 
         @Test
@@ -112,7 +110,7 @@ class OrderControllerTest extends IntegrationTestSupport {
         void unknownOptionRaises() throws Exception {
             // given
             Member member = saveMemberWithPoint("buyer@example.com", 100_000);
-            String token = jwtProvider.createToken(member.getEmail());
+            String token = jwtProvider.createToken(member.getEmail().value());
             String body = """
                 {"optionId": 9999, "quantity": 1}
                 """;
@@ -138,7 +136,7 @@ class OrderControllerTest extends IntegrationTestSupport {
             Option option = saveOption(2_000, 10);
             orderRepository.save(new Order(option, member.getId(), 1, "m1"));
             orderRepository.save(new Order(option, member.getId(), 2, "m2"));
-            String token = jwtProvider.createToken(member.getEmail());
+            String token = jwtProvider.createToken(member.getEmail().value());
 
             // when, then
             mockMvc.perform(get("/api/v1/orders")

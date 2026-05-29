@@ -1,7 +1,7 @@
 package gift.infrastructure.oauth.client;
 
-import gift.storage.order.Order;
-import gift.storage.product.Product;
+import gift.domain.order.Order;
+import gift.domain.product.Product;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -42,8 +42,8 @@ public class KakaoMessageClient {
                 "button_title": "선물 확인하기"
             }
             """.formatted(
-            product.getName(),
-            order.getOption().getName(),
+            product.getName().value(),
+            order.getOption().getName().value(),
             order.getQuantity(),
             totalPrice,
             message

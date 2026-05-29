@@ -1,7 +1,7 @@
 package gift.api.member;
 
 import gift.application.member.MemberService;
-import gift.storage.member.Member;
+import gift.domain.member.Member;
 import gift.support.error.CoreException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

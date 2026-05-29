@@ -1,12 +1,12 @@
 package gift.application.auth;
 
+import gift.domain.member.Member;
+import gift.domain.member.MemberRepository;
 import gift.infrastructure.auth.JwtProvider;
 import gift.infrastructure.oauth.client.KakaoLoginClient;
 import gift.infrastructure.oauth.dto.KakaoTokenResponse;
 import gift.infrastructure.oauth.dto.KakaoUserResponse;
 import gift.infrastructure.oauth.uri.KakaoOAuthUri;
-import gift.storage.member.Member;
-import gift.storage.member.MemberRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,7 +40,7 @@ public class KakaoLoginService {
         KakaoTokenResponse tokenResponse = kakaoLoginClient.requestAccessToken(code);
         KakaoUserResponse userResponse = kakaoLoginClient.requestUserInfo(tokenResponse.accessToken());
         Member member = upsertMember(userResponse.email(), tokenResponse.accessToken());
-        return jwtProvider.createToken(member.getEmail());
+        return jwtProvider.createToken(member.getEmail().value());
     }
 
     private Member upsertMember(String email, String kakaoAccessToken) {

@@ -1,7 +1,7 @@
 package gift.api.option;
 
 import gift.application.option.OptionService;
-import gift.storage.option.Option;
+import gift.domain.option.Option;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

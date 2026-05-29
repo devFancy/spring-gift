@@ -4,9 +4,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface OptionRepository extends JpaRepository<Option, Long> {
+public interface OptionJpaRepository extends JpaRepository<OptionEntity, Long> {
 
-    List<Option> findByProductId(Long productId);
+    List<OptionEntity> findByProductId(Long productId);
 
     boolean existsByProductIdAndName(Long productId, String name);
 }

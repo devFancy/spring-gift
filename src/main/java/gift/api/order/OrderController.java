@@ -1,9 +1,9 @@
 package gift.api.order;
 
-import gift.application.order.OrderService;
 import gift.api.resolver.AuthenticationResolver;
-import gift.storage.member.Member;
-import gift.storage.order.Order;
+import gift.application.order.OrderService;
+import gift.domain.member.Member;
+import gift.domain.order.Order;
 import gift.support.response.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -53,5 +53,4 @@ public class OrderController {
             .location(URI.create("/api/v1/orders/" + saved.getId()))
             .body(ApiResponse.success(OrderDto.Response.from(saved)));
     }
-
 }

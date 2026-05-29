@@ -1,6 +1,6 @@
 package gift.api.option;
 
-import gift.storage.option.Option;
+import gift.domain.option.Option;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -22,7 +22,7 @@ public final class OptionDto {
         int quantity
     ) {
         public static Response from(Option option) {
-            return new Response(option.getId(), option.getName(), option.getQuantity());
+            return new Response(option.getId(), option.getName().value(), option.getQuantity());
         }
     }
 }

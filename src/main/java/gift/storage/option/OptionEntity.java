@@ -1,8 +1,7 @@
 package gift.storage.option;
 
-import gift.storage.product.Product;
-import gift.support.error.CoreException;
-import gift.support.error.ErrorType;
+import gift.domain.option.Option;
+import gift.storage.product.ProductEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,7 +13,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "options")
-public class Option {
+public class OptionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +21,7 @@ public class Option {
 
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
-    private Product product;
+    private ProductEntity product;
 
     @Column(nullable = false, length = 50)
     private String name;
@@ -30,27 +29,30 @@ public class Option {
     @Column(nullable = false)
     private int quantity;
 
-    protected Option() {
+    protected OptionEntity() {
     }
 
-    public Option(Product product, String name, int quantity) {
-        this.product = product;
-        this.name = name;
+    public Option toDomain() {
+        return new Option(id, product.toDomain(), name, quantity);
+    }
+
+    public static OptionEntity from(Option option, ProductEntity productEntity) {
+        OptionEntity entity = new OptionEntity();
+        entity.product = productEntity;
+        entity.name = option.getName().value();
+        entity.quantity = option.getQuantity();
+        return entity;
+    }
+
+    public void updateQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public void subtractQuantity(int amount) {
-        if (amount > this.quantity) {
-            throw new CoreException(ErrorType.CONFLICT, "차감할 수량이 현재 재고보다 많습니다.");
-        }
-        this.quantity -= amount;
     }
 
     public Long getId() {
         return id;
     }
 
-    public Product getProduct() {
+    public ProductEntity getProduct() {
         return product;
     }
 

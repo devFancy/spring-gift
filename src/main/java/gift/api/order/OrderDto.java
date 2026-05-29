@@ -1,6 +1,6 @@
 package gift.api.order;
 
-import gift.storage.order.Order;
+import gift.domain.order.Order;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 

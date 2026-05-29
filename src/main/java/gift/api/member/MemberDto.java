@@ -1,6 +1,6 @@
 package gift.api.member;
 
-import gift.storage.member.Member;
+import gift.domain.member.Member;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -21,7 +21,7 @@ public final class MemberDto {
         int point
     ) {
         public static Response from(Member member) {
-            return new Response(member.getId(), member.getEmail(), member.getPoint());
+            return new Response(member.getId(), member.getEmail().value(), member.getPoint());
         }
     }
 }

@@ -1,10 +1,10 @@
 package gift.application.product;
 
 import gift.IntegrationTestSupport;
-import gift.storage.category.Category;
-import gift.storage.category.CategoryRepository;
-import gift.storage.product.Product;
-import gift.storage.product.ProductRepository;
+import gift.domain.category.Category;
+import gift.domain.category.CategoryRepository;
+import gift.domain.product.Product;
+import gift.domain.product.ProductRepository;
 import gift.support.error.CoreException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -40,7 +40,7 @@ class ProductServiceTest extends IntegrationTestSupport {
             Product saved = productService.create("카카오 콜라보", 5000, "img", category.getId(), true);
 
             // then
-            assertThat(saved.getName()).isEqualTo("카카오 콜라보");
+            assertThat(saved.getName().value()).isEqualTo("카카오 콜라보");
             assertThat(productRepository.findById(saved.getId())).isPresent();
         }
 
