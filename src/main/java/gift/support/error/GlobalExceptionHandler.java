@@ -1,6 +1,9 @@
 package gift.support.error;
 
 import gift.support.response.ApiResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,16 +12,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.stream.Collectors;
 
-// 도메인 예외(CoreException)와 검증 예외를 ApiResponse.error 한 가지 형태로 매핑.
-// 새 예외 종류를 추가할 때는 @ExceptionHandler 메서드를 같은 패턴으로 한 줄 더 추가한다.
 @RestControllerAdvice(annotations = RestController.class)
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(CoreException.class)
     public ResponseEntity<ApiResponse<Void>> handleCoreException(CoreException exception) {
         ErrorType type = exception.errorType();
-        ApiResponse<Void> body = ApiResponse.error(type, exception.getMessage());
-        return ResponseEntity.status(type.status()).body(body);
+        logByLevel(type, exception);
+        return ResponseEntity.status(type.status()).body(ApiResponse.error(type, exception.getMessage()));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -26,13 +29,25 @@ public class GlobalExceptionHandler {
         String message = exception.getBindingResult().getFieldErrors().stream()
             .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
             .collect(Collectors.joining(", "));
-        ApiResponse<Void> body = ApiResponse.error(ErrorType.INVALID_REQUEST, message);
-        return ResponseEntity.status(ErrorType.INVALID_REQUEST.status()).body(body);
+        return ResponseEntity.status(ErrorType.INVALID_REQUEST.status())
+            .body(ApiResponse.error(ErrorType.INVALID_REQUEST, message));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException exception) {
-        ApiResponse<Void> body = ApiResponse.error(ErrorType.INVALID_REQUEST, exception.getMessage());
-        return ResponseEntity.status(ErrorType.INVALID_REQUEST.status()).body(body);
+        return ResponseEntity.status(ErrorType.INVALID_REQUEST.status())
+            .body(ApiResponse.error(ErrorType.INVALID_REQUEST, exception.getMessage()));
+    }
+
+    private void logByLevel(ErrorType type, CoreException exception) {
+        if (type.logLevel() == LogLevel.ERROR) {
+            log.error("[{}] {}", type.code(), exception.getMessage(), exception);
+            return;
+        }
+        if (type.logLevel() == LogLevel.WARN) {
+            log.warn("[{}] {}", type.code(), exception.getMessage());
+            return;
+        }
+        log.info("[{}] {}", type.code(), exception.getMessage());
     }
 }
