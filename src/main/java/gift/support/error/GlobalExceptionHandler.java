@@ -29,17 +29,19 @@ public class GlobalExceptionHandler {
         String message = exception.getBindingResult().getFieldErrors().stream()
             .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
             .collect(Collectors.joining(", "));
+        logByLevel(ErrorType.INVALID_REQUEST, exception);
         return ResponseEntity.status(ErrorType.INVALID_REQUEST.status())
             .body(ApiResponse.error(ErrorType.INVALID_REQUEST, message));
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException exception) {
+        logByLevel(ErrorType.INVALID_REQUEST, exception);
         return ResponseEntity.status(ErrorType.INVALID_REQUEST.status())
             .body(ApiResponse.error(ErrorType.INVALID_REQUEST, exception.getMessage()));
     }
 
-    private void logByLevel(ErrorType type, CoreException exception) {
+    private void logByLevel(ErrorType type, Exception exception) {
         if (type.logLevel() == LogLevel.ERROR) {
             log.error("[{}] {}", type.code(), exception.getMessage(), exception);
             return;
