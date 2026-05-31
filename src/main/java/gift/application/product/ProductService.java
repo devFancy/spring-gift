@@ -4,7 +4,6 @@ import gift.domain.category.Category;
 import gift.domain.category.CategoryRepository;
 import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
-import gift.domain.product.policy.ProductNamePolicy;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.data.domain.Page;
@@ -41,7 +40,9 @@ public class ProductService {
 
     @Transactional
     public Product create(String name, int price, String imageUrl, Long categoryId) {
-        ProductNamePolicy.validateKakaoUsage(name);
+        if (name.contains("카카오")) {
+            throw new CoreException(ErrorType.INVALID_REQUEST, "잘못된 상품명입니다.");
+        }
         return saveProduct(name, price, imageUrl, categoryId);
     }
 
@@ -52,7 +53,9 @@ public class ProductService {
 
     @Transactional
     public Product update(Long id, String name, int price, String imageUrl, Long categoryId) {
-        ProductNamePolicy.validateKakaoUsage(name);
+        if (name.contains("카카오")) {
+            throw new CoreException(ErrorType.INVALID_REQUEST, "잘못된 상품명입니다.");
+        }
         return applyUpdate(id, name, price, imageUrl, categoryId);
     }
 
