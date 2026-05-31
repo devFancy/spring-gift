@@ -123,16 +123,15 @@ Rule(`.claude/rules/`) 은 매번 자동 적용되는 가드레일/제약이다.
 
 ## 6. 룰 라우팅
 
-- 사용자 명령 수신 시 작업 흐름(모호함 확인 -> Plan -> 승인 -> Implement): `.claude/rules/plan-execute-discipline.md`.
-- 커밋 관련 절대 준수와 메시지 형식: `.claude/rules/commit-discipline.md` (다른 모든 룰보다 우선).
-- 코드 작성/리팩터링 시 일반 컨벤션: `.claude/rules/coding-convention.md`.
-- 리팩터링 작업 절차와 11원칙: `.claude/rules/refactoring-discipline.md`.
-- 테스트 작성/실행: `.claude/rules/testing-discipline.md`.
-- 작업 종료 직전 자체 점검: `.claude/rules/self-verification.md`.
-- 컨텍스트/세션 길어졌을 때: `.claude/rules/session-discipline.md`.
-- 문서/응답 표기: `.claude/rules/formatting.md`.
+rules 는 5개다. 모두 매번 자동 적용된다.
 
-리팩터링 한 조각을 단계별로 진행하려면 `/refactor-step` skill 을 호출한다. SKILL.md 가 references/ 의 세부 파일로 라우팅한다.
+- 사용자 명령 수신 시 작업 흐름 + 세션 관리: `.claude/rules/plan-execute-discipline.md`.
+- 커밋 관련 절대 준수와 메시지 형식: `.claude/rules/commit-discipline.md` (다른 모든 룰보다 우선).
+- 코드 작성/리팩터링 시 컨벤션 + 문서 표기: `.claude/rules/coding-convention.md`.
+- 리팩터링 절차, 11원칙, 작업 종료 직전 자가 점검: `.claude/rules/refactoring-discipline.md`.
+- 테스트 작성/실행: `.claude/rules/testing-discipline.md`.
+
+리팩터링 한 조각을 단계별로 진행하려면 `/refactor-step` skill 을 호출한다. `.claude/skills/refactor-step.md` 가 `code-style.md`, `testing-guide.md`, `api-convention.md` 로 라우팅한다.
 
 ---
 
@@ -146,4 +145,4 @@ Rule(`.claude/rules/`) 은 매번 자동 적용되는 가드레일/제약이다.
 - 보완할 때는 "내용 추가" 보다 "단일 책임 유지" 가 우선이다. 한 파일에 두 가지 책임이 섞이면 분리한다.
 - 정기 점검 시점은 도메인 리팩터링 단위가 끝날 때다. 7개 도메인 중 한 도메인이 끝나면 룰/스킬을 한 번 점검한다.
 
-세부 점검 항목은 `.claude/rules/self-verification.md` 가 정의한다.
+세부 점검 항목은 `.claude/rules/refactoring-discipline.md` 가 정의한다.
