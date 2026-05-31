@@ -4,7 +4,7 @@ Date: 2026-05-19
 
 ## Status
 
-Accepted
+Accepted (2026-05-31 Decision 섹션 업데이트: ControllerTest → ControllerDocsTest 전환 반영)
 
 ## Context
 
