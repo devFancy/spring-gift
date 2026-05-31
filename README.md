@@ -1,13 +1,15 @@
 # spring-gift
 
-카카오 선물하기 백엔드 서버를 리팩터링하는 미션. 
-Controller 안에 데이터 접근부터 비즈니스 처리까지 한데 뒤섞여 있던 구조를 역할별 패키지로 나눠 정리한다.
+카카오 선물하기 백엔드 서버를 리팩터링하는 미션입니다. Controller 안에 데이터 접근부터 비즈니스 처리까지 한데 뒤섞여 있던 구조를 역할별 패키지로 나눠 정리했습니다.
 
 ---
 
 ## 기능 목록 단위
 
-기능 단위로 커밋을 분리한다. `<type>(<scope>): <한국어 제목>` 형식을 사용한다.
+기능 단위로 커밋을 분리합니다. `<type>(<scope>): <한국어 제목>` 형식을 사용합니다.
+
+<details>
+<summary>전체 목록 보기</summary>
 
 - [x] 작업 환경 가이드 - Claude Code 가드레일과 작업 흐름 룰을 저장소에 함께 보관
 - [x] 전역 응답/에러 처리 - 모든 API 응답을 같은 모양으로 감싸고, 예외도 같은 흐름으로 처리
@@ -31,36 +33,26 @@ Controller 안에 데이터 접근부터 비즈니스 처리까지 한데 뒤섞
 - [x] 도메인 모델링 문서화 - 용어 사전과 도메인별 속성/행위/정책을 `docs/gift-domain-modeling.md` 에 정리
 - [x] ADR 작성 - 선택지가 둘 이상이었던 설계 결정을 4개 ADR 로 기록
 
+</details>
+
 ---
 
 ## AI 도구 활용 기록
 
-본 프로젝트는 Claude Code 와 함께 진행했다. "코드를 대신 짜 주는" 자유 방임이 아니라 AI 가 일할 작업 환경 자체를 먼저 설계하고 그 안에서 실행하는 방식을 택했다.
+Claude Code 와 함께 진행했습니다. "코드를 대신 짜 주는" 방식이 아니라, AI 가 일할 환경(`CLAUDE.md`, `.claude/rules/`, `.claude/skills/`)을 먼저 설계하고 계획 제안 -> 승인 -> 실행 순서로 진행했습니다.
 
-가드레일은 세 가지 역할로 나눴다. `CLAUDE.md` 는 프로젝트 컨텍스트, `.claude/rules/` 는 매번 자동 적용되는 제약, `.claude/skills/refactor-step/` 는 필요할 때
-호출하는 워크플로우다. 모든 작업은 계획 제안 -> 사용자 승인 -> 실행 순서로 진행하고, 작업이 끝나면 7개 항목을 자가 점검한다.
+### 반복한 프롬프트 패턴
 
-### 코드를 어떻게 수정했고 무엇을 학습했는지
+- 범위 좁히기: `/refactor-step 주문 흐름을 패키지별로 정리하고 카카오 메시지 클라이언트를 infrastructure/oauth 로 이동`
+- 단일 목적 분리: "주문 영역에 테스트 먼저 추가하고, 구조 정리는 별도 커밋으로 분리해"
 
-실제 사용한 프롬프트 패턴은 다음 두 가지가 반복됐다.
+### 코드 리뷰에서 생긴 결정
 
-- `/refactor-step 주문 흐름을 패키지별로 정리하고 카카오 메시지 클라이언트를 infrastructure/oauth 로 이동` - 변경 한 조각의 범위를 좁혀 실행. 스킬이 단일 목적 확인 -> 범위
-  좁히기 -> 적용 -> 검증 -> 커밋 승인 단계를 자동 진행.
-- "주문 영역에 작동 보존 테스트 먼저 추가하고, 구조 정리는 별도 커밋으로 분리해" - 단일 목적 분리. 리팩터링과 테스트 추가가 한 커밋에 섞이지 않도록 작동 보존 테스트(test:) -> 구조 정리(
-  refactor:) -> 추가 통합 테스트(test:) 3개 커밋으로 분할 적용.
+- `ErrorType` 에 `HttpStatus` 포함 유지. "서비스 계층 순수성이 깨진다"는 리뷰에, 서비스가 `HttpStatus` 를 직접 꺼내 쓰지 않는다는 점과 `support/` 가 전 계층 공유 위치라는 점을 근거로 답변했습니다. ADR-004 로 기록.
+- `vo/` 서브패키지 분리 유지. package-private 제안을 검토했을 때 `storage/ProductEntity` 가 VO 에 직접 접근해 `public` 이 강제됨을 확인했습니다. Eric Evans 전술적 패턴 구분을 근거로 유지.
+- 카테고리 `ServiceTest` 제거. ControllerTest 가 이미 외부 계약과 상태 변화를 모두 검증하고 있어 중복이라 판단했습니다.
 
-코드 리뷰 과정에서 설계 결정이 더 선명해졌다.
-
-- `ErrorType` 에 `HttpStatus` 를 포함한 결정에 대해 "서비스 계층 순수성이 깨진다"는 리뷰가 왔다. 서비스가 `HttpStatus` 를 직접 꺼내 쓰지 않는다는 점(
-  `GlobalExceptionHandler` 한 곳에서만 사용)과 `support/` 가 모든 패키지가 공유하는 위치라는 점을 근거로 정리했다. 이 판단을 ADR-004 로 기록.
-- `vo/` 서브패키지 분리를 같은 패키지에 두는 방향으로 바꾸자는 제안이 왔다. package-private 캡슐화 주장을 검토했을 때 `storage/ProductEntity` 가
-  `product.getName().value()` 형태로 VO 에 접근하므로 이 구조에서는 VO 가 public 이어야 함을 확인했다. Eric Evans 의 전술적 패턴 구분을 근거로 분리 유지.
-- 카테고리 영역 `ServiceTest` 를 삭제했다. ControllerTest 가 이미 외부 계약과 상태 변화를 모두 검증하고 있어서, 단순 CRUD 인 카테고리는 ServiceTest 가 같은 시나리오를
-  반복하는 것이라 판단했다.
-
-AI 가 제시한 사실은 별도 출처 확인 후 채택한다. 검증 없이 받아들이면 코드에 그럴듯한 오류가 남는다. 출처는 `docs/private/research/` 에 별도 문서로 정리한다.
-
-AI 가 작성한 코드는 초안이며, 설계와 검증의 책임은 본인에게 있다. 중간 결과물의 의도하지 않은 변경은 즉시 제거하고, 커밋 직전 git diff 를 사람이 직접 한 번 더 확인한다.
+AI 가 제시한 사실은 별도 출처 확인 후 채택하고, 설계와 검증의 책임은 본인에게 있습니다.
 
 ---
 
@@ -79,24 +71,33 @@ src/main/java/gift/
 └── config/        # 설정
 ```
 
-의존 방향: `api -> application -> domain`. `storage` 와 `infrastructure` 는 `domain` 을 참조하며, 역방향은 없다.
+의존 방향: `api -> application -> domain`. `storage` 와 `infrastructure` 는 `domain` 을 참조하며, 역방향은 없습니다. 멀티 모듈 전환 시 각 패키지가 독립 모듈이 될 수 있도록 순환 의존을 허용하지 않았습니다.
+
+### 도메인 모델링
+
+리팩터링의 출발점은 도메인 언어를 먼저 정의하는 것이었습니다. [용어 사전과 도메인 모델](docs/gift-domain-modeling.md)을 먼저 작성하고, 코드 네이밍과 커밋 메시지까지 같은 언어를 썼습니다. NextStep DDD Serenade 강의의 전략적 설계(용어 사전, 도메인 모델링)와 전술적 설계(값 객체, 엔티티, 도메인 Repository)를 실제 코드에 적용한 결과입니다.
+
+### 설계 의도
+
+- DTO 응집: Kotlin의 data class 처럼 도메인별로 관련 DTO를 한 파일에 모으는 패턴을 Java `record` 정적 중첩 클래스로 구현했습니다. `ProductDto.Request`, `ProductDto.Response` 형태로 파일 수를 줄이고 응집도를 높였습니다.
+- 예외 처리 트레이드오프: `ErrorType` 하나에 에러 코드, HTTP 상태, 메시지, 로그 레벨을 모아 핸들러를 단순하게 유지했습니다. 계층 순수성보다 응집성을 우선한 결정이며 [ADR-004](docs/adr/0004-include-http-status-in-error-type.md) 에 근거를 기록했습니다.
 
 ### 아키텍처 결정 기록
 
-설계 과정에서 선택지가 둘 이상이었던 결정은 [docs/adr/](docs/adr/) 에 기록했다.
+설계 과정에서 선택지가 둘 이상이었던 결정은 [docs/adr/](docs/adr/) 에 기록했습니다.
 
-| ADR                                                                                 | 결정 요약                     |
-|-------------------------------------------------------------------------------------|---------------------------|
-| [ADR-001](docs/adr/0001-adopt-responsibility-based-package-boundaries.md)           | 책임 기반 패키지 경계 채택           |
-| [ADR-002](docs/adr/0002-use-integration-tests-as-behavior-preservation-evidence.md) | 작동 보존 증거로 통합 테스트 채택       |
-| [ADR-003](docs/adr/0003-separate-domain-object-from-jpa-entity.md)                  | 도메인 객체와 JPA 엔티티 분리        |
-| [ADR-004](docs/adr/0004-include-http-status-in-error-type.md)                       | ErrorType 에 HttpStatus 포함 |
+| ADR | 결정 요약 |
+| --- | --- |
+| [ADR-001](docs/adr/0001-adopt-responsibility-based-package-boundaries.md) | 책임 기반 패키지 경계 채택 |
+| [ADR-002](docs/adr/0002-use-integration-tests-as-behavior-preservation-evidence.md) | 작동 보존 증거로 통합 테스트 채택 |
+| [ADR-003](docs/adr/0003-separate-domain-object-from-jpa-entity.md) | 도메인 객체와 JPA 엔티티 분리 |
+| [ADR-004](docs/adr/0004-include-http-status-in-error-type.md) | ErrorType 에 HttpStatus 포함 |
 
 ---
 
 ## API 명세서
 
-모든 REST API 응답은 아래 공통 형식으로 반환한다.
+모든 REST API 응답은 아래 공통 형식으로 반환합니다.
 
 ``` json
 // 성공
@@ -106,65 +107,65 @@ src/main/java/gift/
 { "result": "ERROR", "data": null, "error": { "code": "E400", "message": "..." } }
 ```
 
-인증이 필요한 API 는 요청 헤더에 `Authorization: Bearer {token}` 을 포함한다.
+인증이 필요한 API 는 요청 헤더에 `Authorization: Bearer {token}` 을 포함합니다.
 
 ### 회원
 
-| 메서드  | URL                      | 설명             | 인증  |
-|------|--------------------------|----------------|-----|
-| POST | /api/v1/members/register | 회원 가입          | 불필요 |
-| POST | /api/v1/members/login    | 로그인, JWT 토큰 발급 | 불필요 |
+| 메서드 | URL | 설명 | 인증 |
+| --- | --- | --- | --- |
+| POST | /api/v1/members/register | 회원 가입 | 불필요 |
+| POST | /api/v1/members/login | 로그인, JWT 토큰 발급 | 불필요 |
 
 ### 카카오 로그인
 
-| 메서드 | URL                         | 설명               | 인증  |
-|-----|-----------------------------|------------------|-----|
-| GET | /api/v1/auth/kakao/login    | 카카오 로그인 페이지로 이동  | 불필요 |
+| 메서드 | URL | 설명 | 인증 |
+| --- | --- | --- | --- |
+| GET | /api/v1/auth/kakao/login | 카카오 로그인 페이지로 이동 | 불필요 |
 | GET | /api/v1/auth/kakao/callback | 인증 코드 수신, JWT 발급 | 불필요 |
 
 ### 상품
 
-| 메서드    | URL                   | 설명             | 인증  |
-|--------|-----------------------|----------------|-----|
-| GET    | /api/v1/products      | 상품 목록 조회 (페이징) | 불필요 |
-| GET    | /api/v1/products/{id} | 상품 단건 조회       | 불필요 |
-| POST   | /api/v1/products      | 상품 등록          | JWT |
-| PUT    | /api/v1/products/{id} | 상품 수정          | JWT |
-| DELETE | /api/v1/products/{id} | 상품 삭제          | JWT |
+| 메서드 | URL | 설명 | 인증 |
+| --- | --- | --- | --- |
+| GET | /api/v1/products | 상품 목록 조회 (페이징) | 불필요 |
+| GET | /api/v1/products/{id} | 상품 단건 조회 | 불필요 |
+| POST | /api/v1/products | 상품 등록 | JWT |
+| PUT | /api/v1/products/{id} | 상품 수정 | JWT |
+| DELETE | /api/v1/products/{id} | 상품 삭제 | JWT |
 
 ### 상품 옵션
 
-| 메서드    | URL                                             | 설명       | 인증  |
-|--------|-------------------------------------------------|----------|-----|
-| GET    | /api/v1/products/{productId}/options            | 옵션 목록 조회 | 불필요 |
-| POST   | /api/v1/products/{productId}/options            | 옵션 등록    | JWT |
-| DELETE | /api/v1/products/{productId}/options/{optionId} | 옵션 삭제    | JWT |
+| 메서드 | URL | 설명 | 인증 |
+| --- | --- | --- | --- |
+| GET | /api/v1/products/{productId}/options | 옵션 목록 조회 | 불필요 |
+| POST | /api/v1/products/{productId}/options | 옵션 등록 | JWT |
+| DELETE | /api/v1/products/{productId}/options/{optionId} | 옵션 삭제 | JWT |
 
 ### 카테고리
 
-| 메서드    | URL                     | 설명         | 인증  |
-|--------|-------------------------|------------|-----|
-| GET    | /api/v1/categories      | 카테고리 목록 조회 | 불필요 |
-| POST   | /api/v1/categories      | 카테고리 등록    | JWT |
-| PUT    | /api/v1/categories/{id} | 카테고리 수정    | JWT |
-| DELETE | /api/v1/categories/{id} | 카테고리 삭제    | JWT |
+| 메서드 | URL | 설명 | 인증 |
+| --- | --- | --- | --- |
+| GET | /api/v1/categories | 카테고리 목록 조회 | 불필요 |
+| POST | /api/v1/categories | 카테고리 등록 | JWT |
+| PUT | /api/v1/categories/{id} | 카테고리 수정 | JWT |
+| DELETE | /api/v1/categories/{id} | 카테고리 삭제 | JWT |
 
 ### 위시리스트
 
-| 메서드    | URL                 | 설명               | 인증  |
-|--------|---------------------|------------------|-----|
-| GET    | /api/v1/wishes      | 내 위시리스트 조회 (페이징) | JWT |
-| POST   | /api/v1/wishes      | 위시 추가            | JWT |
-| DELETE | /api/v1/wishes/{id} | 위시 삭제            | JWT |
+| 메서드 | URL | 설명 | 인증 |
+| --- | --- | --- | --- |
+| GET | /api/v1/wishes | 내 위시리스트 조회 (페이징) | JWT |
+| POST | /api/v1/wishes | 위시 추가 | JWT |
+| DELETE | /api/v1/wishes/{id} | 위시 삭제 | JWT |
 
 ### 주문
 
-| 메서드  | URL            | 설명               | 인증  |
-|------|----------------|------------------|-----|
-| GET  | /api/v1/orders | 내 주문 목록 조회 (페이징) | JWT |
-| POST | /api/v1/orders | 주문 생성            | JWT |
+| 메서드 | URL | 설명 | 인증 |
+| --- | --- | --- | --- |
+| GET | /api/v1/orders | 내 주문 목록 조회 (페이징) | JWT |
+| POST | /api/v1/orders | 주문 생성 | JWT |
 
-운영자 화면(`/admin/products`, `/admin/members`)은 Thymeleaf 기반 서버 렌더링 페이지로, 위 REST API 와 별개로 동작한다.
+운영자 화면(`/admin/products`, `/admin/members`)은 Thymeleaf 기반 서버 렌더링 페이지로, 위 REST API 와 별개로 동작합니다.
 
 ### API 응답 예시
 
@@ -213,13 +214,13 @@ POST /api/v1/products
 
 ## 카카오 로그인 사용 시 설정 (선택)
 
-카카오 API 애플리케이션 등록은 본인이 직접 처리한다. 등록 후 `application.properties` 의 다음 값을 채운다.
+카카오 API 애플리케이션 등록은 본인이 직접 처리합니다. 등록 후 `application.properties` 의 다음 값을 채웁니다.
 
 - `kakao.login.client-id`
 - `kakao.login.client-secret`
 - `kakao.login.redirect-uri` (예: `http://localhost:8080/api/auth/kakao/callback`)
 
-운영 환경에서는 환경 변수로 주입한다. 어드민 키, 액세스 토큰, 클라이언트 시크릿은 저장소나 클라이언트 코드에 절대 포함하지 않는다.
+운영 환경에서는 환경 변수로 주입합니다. 어드민 키, 액세스 토큰, 클라이언트 시크릿은 저장소나 클라이언트 코드에 절대 포함하지 않습니다.
 
 ---
 
@@ -230,3 +231,24 @@ POST /api/v1/products
 ./gradlew test              # 테스트만 실행
 ./gradlew bootRun           # 서버 실행
 ```
+
+---
+
+## 소감 (Lessons Learned)
+
+### 잘된 점
+
+영속성 객체와 도메인 객체를 분리한 뒤 코드 읽는 경로가 달라졌습니다. 비즈니스 규칙이 궁금하면 `domain/` 만, 저장 방식이 궁금하면 `storage/` 만 보면 됐습니다. 리팩터링 전에는 한 파일에서 두 관심사를 동시에 읽어야 했습니다.
+
+코드 리뷰를 통해 스스로는 충분하다고 생각한 설계 결정들이 다른 시각에서 검토됐습니다. `ErrorType` 에 `HttpStatus` 를 넣는 결정, `vo/` 서브패키지 분리 유지 결정 모두 리뷰어의 질문을 계기로 근거가 더 단단해졌습니다.
+
+### 배운 점
+
+단일 목적 커밋은 리뷰어를 위한 장치이기도 하지만 작성자 본인이 작업 범위를 좁히는 도구로 더 강합니다. "지금 이 커밋에 들어가도 되는 변경인가"를 매 변경마다 묻게 됩니다.
+
+ADR 은 결정 자체보다 "왜 다른 선택지를 택하지 않았는가"를 남기는 게 핵심입니다. 코드는 현재 상태를 보여주지만 ADR 은 그 상태에 이르기까지의 판단을 기록합니다.
+
+### 아쉬운 점
+
+ADR 을 코드 반영 이후가 아니라 설계 시작 시점에 먼저 작성하고 싶습니다. 이번에는 `ErrorType` 에 `HttpStatus` 를 포함하는 결정을 코드에 먼저 반영한 뒤 리뷰 질문을 받고 나서야 ADR 로 정리했습니다. 
+처음부터 "선택지가 둘 이상인가"를 체크했다면 근거를 더 일찍 남길 수 있었습니다.
