@@ -20,10 +20,10 @@ Accepted
 
 도메인별 6계층 패키지 구조를 채택한다. 각 도메인은 다음 위치에 자기 부분을 가진다.
 
-- `api/{domain}/` 사용자 요청 진입점 (Controller, DTO, Validator)
+- `api/{domain}/` 사용자 요청 진입점 (Controller, DTO)
 - `application/{domain}/` 응용 서비스 (Service, 트랜잭션 경계)
 - `domain/{domain}/` 도메인 모델과 정책 (Policy, VO. 프레임워크 의존 금지)
-- `infrastructure/` 외부 시스템 통신 (`oauth/{client,dto,uri}`, `auth`)
+- `infrastructure/` 외부 시스템 통신 및 기술 구현체. 카카오 OAuth 코드는 `oauth/{client,dto,uri}` 하위에, JwtProvider / Sha256PasswordEncoder / SystemClockHolder 는 루트에 직접 배치
 - `storage/{domain}/` 영속성 (JPA Entity, Repository)
 - `support/` 전 영역이 공유하는 응답 형식과 에러 타입
 
@@ -45,5 +45,4 @@ Accepted
 
 후속 결정.
 
-- 외부 통신 영역의 세부 구조 (`oauth/{client,dto,uri}` 하위 디렉토리 분리) 는 별도 ADR 후보.
-- 통합 테스트로 6계층 분리의 작동 보존을 증명하는 전략은 ADR-005 에서 다룬다.
+- 통합 테스트로 6계층 분리의 작동 보존을 증명하는 전략은 ADR-002 에서 다룬다.

@@ -27,7 +27,7 @@ Accepted
 - `domain/{domain}/` - 순수 Java 클래스. JPA/Spring import 없음. 비즈니스 행위와 불변식 보유.
 - `domain/{domain}/vo/` - 값 객체. 생성자에서 도메인 규칙 검증. JPA/Spring import 없음.
 - `domain/{domain}/{Domain}Repository.java` - 도메인 Repository 인터페이스. Spring Data 의존 없음 (Page/Pageable은 허용).
-- `storage/{domain}/{Domain}Entity.java` - JPA `@Entity`. `toDomain()` / `from(domain)` 변환 메서드 보유.
+- `storage/{domain}/{Domain}Entity.java` - JPA `@Entity`. `toDomain()` 과 정적 팩토리 `from()` 변환 메서드 보유. 연관 관계가 없는 엔티티(CategoryEntity, MemberEntity)는 `from(도메인객체)` 단일 파라미터. 연관 관계가 있는 엔티티(ProductEntity, OptionEntity, WishEntity, OrderEntity)는 `from(도메인객체, 연관스토리지엔티티)` 형태로 관련 스토리지 엔티티를 추가로 받는다.
 - `storage/{domain}/{Domain}JpaRepository.java` - `JpaRepository<*Entity, Long>` 확장 인터페이스.
 - `storage/{domain}/{Domain}RepositoryImpl.java` - 도메인 Repository 인터페이스 구현체. `@Repository` 빈.
 
