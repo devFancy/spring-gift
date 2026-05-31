@@ -27,9 +27,9 @@ Accepted
 
 리팩터링 작업은 도메인 단위로 3개 커밋으로 분리한다.
 
-1. `test:` 작동 보존 테스트 (변경 전 외부 계약과 DB 상태 변화 캡처)
-2. `refactor:` 6계층 분리와 응답 포맷 통일
-3. `test:` 정책 분기 / idempotent 시나리오 ServiceTest 보강
+1. `test:` 시나리오 통합 테스트 추가 (변경 전 외부 계약과 DB 상태 변화 캡처)
+2. `refactor:` 도메인 흐름 정리 (패키지 분리, 응답 형식 통일)
+3. `test:` 서비스 통합 테스트 추가 (정책 분기, idempotent 시나리오)
 
 ## Consequences
 
