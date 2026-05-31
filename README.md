@@ -80,7 +80,7 @@ src/main/java/gift/
 ### 설계 의도
 
 - DTO 응집: Kotlin의 data class 처럼 도메인별로 관련 DTO를 한 파일에 모으는 패턴을 Java `record` 정적 중첩 클래스로 구현했습니다. `ProductDto.Request`, `ProductDto.Response` 형태로 파일 수를 줄이고 응집도를 높였습니다.
-- 예외 처리 트레이드오프: `ErrorType` 하나에 에러 코드, HTTP 상태, 메시지, 로그 레벨을 모아 핸들러를 단순하게 유지했습니다. 계층 순수성보다 응집성을 우선한 결정이며 "ADR-004"에 근거를 기록했습니다.
+- 예외 처리 트레이드오프: `ErrorType` 하나에 에러 코드, HTTP 상태, 메시지, 로그 레벨을 모아 핸들러를 단순하게 유지했습니다. 계층 순수성보다 응집성을 우선한 결정이며 [ADR-004](docs/adr/0004-include-http-status-in-error-type.md) 에 근거를 기록했습니다.
 
 ### 아키텍처 결정 기록
 
@@ -205,7 +205,7 @@ POST /api/v1/products
   "data": null,
   "error": {
     "code": "E400",
-    "message": "상품 이름은 15자 이하여야 합니다."
+    "message": "상품 이름은 공백을 포함하여 최대 15자까지 입력할 수 있습니다."
   }
 }
 ```

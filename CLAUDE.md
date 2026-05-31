@@ -1,8 +1,8 @@
 # spring-gift - Project Guide for Claude Code
 
-본 문서는 spring-gift 리팩터링 작업의 Project 수준 컨텍스트다. Claude Code 가 모든 코드 작업 전에 자동 로드한다. 구조와 컨벤션은 Spring Boot 환경의 도메인 주도 설계와 클린 아키텍처 원칙을 spring-gift(Java) 맥락에 재서술한 결과다. 모든 항목을 그대로 따르지 않고 spring-gift 에 의미 있는 항목만 선택한다.
+본 문서는 spring-gift 리팩터링 작업의 Project 수준 컨텍스트다. Claude Code 가 모든 코드 작업 전에 자동 로드한다. 구조와 컨벤션은 Spring Boot 환경의 도메인 주도 설계를 spring-gift(Java) 맥락에 맞게 적용한 결과다. 모든 항목을 그대로 따르지 않고 spring-gift 에 의미 있는 항목만 선택한다.
 
-본 과제는 리팩터링 전용이다. 새 작동을 도입하는 기능 구현은 이번 라운드 범위가 아니다.
+본 프로젝트는 리팩터링에 집중한다. 새 작동을 도입하는 기능 구현은 이번 범위가 아니다.
 
 커밋 관련 절대 준수 항목은 `.claude/rules/commit-discipline.md` 가 단일 출처이며 다른 모든 룰보다 우선한다.
 
@@ -79,7 +79,7 @@ src/main/java/gift/
 
 형식: `<type>(<scope>): <한국어 제목>`
 
-type 은 다음 5개만 사용한다. 본 과제는 리팩터링 전용이라 새 작동을 도입하는 `feat` 는 사용하지 않는다. 다른 type(style, perf, build, ci 등)은 chore 또는 refactor 로 흡수한다.
+type 은 다음 5개만 사용한다. 새 작동을 도입하는 `feat` 는 사용하지 않는다. 다른 type(style, perf, build, ci 등)은 chore 또는 refactor 로 흡수한다.
 
 | type | 용도 |
 | --- | --- |
@@ -113,7 +113,7 @@ Rule(`.claude/rules/`) 은 매번 자동 적용되는 가드레일/제약이다.
 
 ## 5. 카카오 소셜 로그인 - 사전 가정
 
-과제5 의 "과제 진행 요구 사항 (선택)" 인 카카오 API 애플리케이션 등록은 사용자가 직접 처리한다. Claude 는 등록 완료를 전제로 진행하며 `application.properties` 의 `kakao.login.client-id`, `client-secret`, redirect URI 가 설정되어 있다고 가정한다.
+카카오 API 애플리케이션 등록은 사용자가 직접 처리한다. Claude 는 등록 완료를 전제로 진행하며 `application.properties` 의 `kakao.login.client-id`, `client-secret`, redirect URI 가 설정되어 있다고 가정한다.
 
 카카오 소셜 로그인은 OAuth 클라이언트(`infrastructure/oauth/`), 설정 프로퍼티(`config/kakao/`), 토큰 발급/검증(`infrastructure/auth/`), ArgumentResolver(`api/resolver/`) 4개 영역으로 분리해서 패키지 배치한다. 응답 처리, 토큰 발급 흐름은 Java 관용구(Optional, record 또는 일반 클래스)로 작성한다. 실제 호출 테스트가 필요한 작업이면 사용자에게 값 설정 여부를 먼저 묻는다.
 
@@ -128,7 +128,7 @@ rules 는 5개다. 모두 매번 자동 적용된다.
 - 사용자 명령 수신 시 작업 흐름 + 세션 관리: `.claude/rules/plan-execute-discipline.md`.
 - 커밋 관련 절대 준수와 메시지 형식: `.claude/rules/commit-discipline.md` (다른 모든 룰보다 우선).
 - 코드 작성/리팩터링 시 컨벤션 + 문서 표기: `.claude/rules/coding-convention.md`.
-- 리팩터링 절차, 11원칙, 작업 종료 직전 자가 점검: `.claude/rules/refactoring-discipline.md`.
+- 리팩터링 절차, 10원칙, 작업 종료 직전 자가 점검: `.claude/rules/refactoring-discipline.md`.
 - 테스트 작성/실행: `.claude/rules/testing-discipline.md`.
 
 리팩터링 한 조각을 단계별로 진행하려면 `/refactor-step` skill 을 호출한다. `.claude/skills/refactor-step.md` 가 `code-style.md`, `testing-guide.md`, `api-convention.md` 로 라우팅한다.
