@@ -51,7 +51,7 @@ class MemberServiceTest extends IntegrationTestSupport {
             Member updated = memberService.chargePoint(member.getId(), 10000);
 
             // then
-            assertThat(updated.getPoint()).isEqualTo(10000);
+            assertThat(updated.getPoint().value()).isEqualTo(10000);
         }
 
         @Test

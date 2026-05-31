@@ -29,8 +29,8 @@ public final class OrderDto {
             return new Response(
                 order.getId(),
                 order.getOption().getId(),
-                order.getQuantity(),
-                order.getMessage(),
+                order.getQuantity().value(),
+                order.getMessage() != null ? order.getMessage().value() : null,
                 order.getOrderDateTime()
             );
         }

@@ -30,9 +30,9 @@ public class KakaoMessageClient {
     }
 
     private String buildTemplate(Order order, Product product) {
-        var totalPrice = String.format("%,d", product.getPrice().value() * order.getQuantity());
-        var message = order.getMessage() != null && !order.getMessage().isBlank()
-            ? "\\n\\n💌 " + order.getMessage()
+        var totalPrice = String.format("%,d", product.getPrice().value() * order.getQuantity().value());
+        var messageText = order.getMessage() != null && !order.getMessage().value().isBlank()
+            ? "\\n\\n💌 " + order.getMessage().value()
             : "";
         return """
             {
@@ -44,9 +44,9 @@ public class KakaoMessageClient {
             """.formatted(
             product.getName().value(),
             order.getOption().getName().value(),
-            order.getQuantity(),
+            order.getQuantity().value(),
             totalPrice,
-            message
+            messageText
         );
     }
 }

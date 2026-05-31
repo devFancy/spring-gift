@@ -1,6 +1,8 @@
 package gift.domain.order;
 
 import gift.domain.option.Option;
+import gift.domain.order.vo.OrderMessage;
+import gift.domain.order.vo.Quantity;
 
 import java.time.LocalDateTime;
 
@@ -9,16 +11,20 @@ public class Order {
     private final Long id;
     private final Option option;
     private final Long memberId;
-    private final int quantity;
-    private final String message;
+    private final Quantity quantity;
+    private final OrderMessage message;
     private final LocalDateTime orderDateTime;
 
     public Order(Long id, Option option, Long memberId, int quantity, String message, LocalDateTime orderDateTime) {
         this.id = id;
         this.option = option;
         this.memberId = memberId;
-        this.quantity = quantity;
-        this.message = message;
+        this.quantity = new Quantity(quantity);
+        if (message != null) {
+            this.message = new OrderMessage(message);
+        } else {
+            this.message = null;
+        }
         this.orderDateTime = orderDateTime;
     }
 
@@ -38,11 +44,11 @@ public class Order {
         return memberId;
     }
 
-    public int getQuantity() {
+    public Quantity getQuantity() {
         return quantity;
     }
 
-    public String getMessage() {
+    public OrderMessage getMessage() {
         return message;
     }
 

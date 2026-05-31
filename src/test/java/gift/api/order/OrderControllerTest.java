@@ -79,11 +79,11 @@ class OrderControllerTest extends IntegrationTestSupport {
             assertThat(reloadedOption.getQuantity().value()).isEqualTo(7);
 
             Member reloadedMember = memberRepository.findById(member.getId()).orElseThrow();
-            assertThat(reloadedMember.getPoint()).isEqualTo(100_000 - 2_000 * 3);
+            assertThat(reloadedMember.getPoint().value()).isEqualTo(100_000 - 2_000 * 3);
 
             List<Order> orders = orderRepository.findByMemberId(member.getId(), PageRequest.of(0, 100)).getContent();
             assertThat(orders).hasSize(1);
-            assertThat(orders.get(0).getQuantity()).isEqualTo(3);
+            assertThat(orders.get(0).getQuantity().value()).isEqualTo(3);
             assertThat(orders.get(0).getMemberId()).isEqualTo(member.getId());
         }
 

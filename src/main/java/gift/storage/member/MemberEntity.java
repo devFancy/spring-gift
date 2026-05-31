@@ -32,7 +32,7 @@ public class MemberEntity {
         entity.email = member.getEmail().value();
         entity.password = extractPassword(member);
         entity.kakaoAccessToken = member.getKakaoAccessToken();
-        entity.point = member.getPoint();
+        entity.point = member.getPoint().value();
         return entity;
     }
 
@@ -40,7 +40,7 @@ public class MemberEntity {
         this.email = member.getEmail().value();
         this.password = extractPassword(member);
         this.kakaoAccessToken = member.getKakaoAccessToken();
-        this.point = member.getPoint();
+        this.point = member.getPoint().value();
     }
 
     private static String extractPassword(Member member) {

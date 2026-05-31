@@ -40,8 +40,10 @@ public class OrderEntity {
         OrderEntity entity = new OrderEntity();
         entity.option = optionEntity;
         entity.memberId = order.getMemberId();
-        entity.quantity = order.getQuantity();
-        entity.message = order.getMessage();
+        entity.quantity = order.getQuantity().value();
+        if (order.getMessage() != null) {
+            entity.message = order.getMessage().value();
+        }
         entity.orderDateTime = order.getOrderDateTime();
         return entity;
     }
