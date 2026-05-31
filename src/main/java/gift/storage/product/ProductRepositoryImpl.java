@@ -4,6 +4,7 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.storage.category.CategoryEntity;
 import gift.storage.category.CategoryJpaRepository;
+import gift.storage.option.OptionJpaRepository;
 import gift.support.error.CoreException;
 import gift.support.error.ErrorType;
 import org.springframework.data.domain.Page;
@@ -18,13 +19,16 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     private final ProductJpaRepository productJpaRepository;
     private final CategoryJpaRepository categoryJpaRepository;
+    private final OptionJpaRepository optionJpaRepository;
 
     public ProductRepositoryImpl(
         ProductJpaRepository productJpaRepository,
-        CategoryJpaRepository categoryJpaRepository
+        CategoryJpaRepository categoryJpaRepository,
+        OptionJpaRepository optionJpaRepository
     ) {
         this.productJpaRepository = productJpaRepository;
         this.categoryJpaRepository = categoryJpaRepository;
+        this.optionJpaRepository = optionJpaRepository;
     }
 
     @Override
@@ -53,6 +57,7 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     @Override
     public void deleteById(Long id) {
+        optionJpaRepository.deleteAllByProductId(id);
         productJpaRepository.deleteById(id);
     }
 

@@ -9,4 +9,6 @@ public interface OptionJpaRepository extends JpaRepository<OptionEntity, Long> {
     List<OptionEntity> findByProductId(Long productId);
 
     boolean existsByProductIdAndName(Long productId, String name);
+
+    void deleteAllByProductId(Long productId);
 }
