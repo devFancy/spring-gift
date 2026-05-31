@@ -7,14 +7,13 @@ import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.support.error.CoreException;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@DisplayName("상품 카탈로그 흐름")
+@DisplayName("상품 카탈로그")
 class ProductServiceTest extends IntegrationTestSupport {
 
     @Autowired
@@ -26,31 +25,26 @@ class ProductServiceTest extends IntegrationTestSupport {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    @Nested
-    @DisplayName("상품을 등록할 때")
-    class RegisterProduct {
+    @Test
+    @DisplayName("상품을 등록할 때 운영자는 상품명에 카카오를 포함시킬 수 있다")
+    void adminCanIncludeKakaoInName() {
+        // given
+        Category category = saveCategory();
 
-        @Test
-        @DisplayName("운영자는 상품명에 카카오를 포함시킬 수 있다")
-        void adminCanIncludeKakaoInName() {
-            // given
-            Category category = saveCategory();
+        // when
+        Product saved = productService.createForAdmin("카카오 콜라보", 5000, "img", category.getId());
 
-            // when
-            Product saved = productService.createForAdmin("카카오 콜라보", 5000, "img", category.getId());
+        // then
+        assertThat(saved.getName().value()).isEqualTo("카카오 콜라보");
+        assertThat(productRepository.findById(saved.getId())).isPresent();
+    }
 
-            // then
-            assertThat(saved.getName().value()).isEqualTo("카카오 콜라보");
-            assertThat(productRepository.findById(saved.getId())).isPresent();
-        }
-
-        @Test
-        @DisplayName("존재하지 않는 카테고리로 등록하면 예외가 발생한다")
-        void registeringWithUnknownCategoryRaises() {
-            assertThatThrownBy(() -> productService.create("상품", 5000, "img", 9999L))
-                .isInstanceOf(CoreException.class)
-                .hasMessageContaining("카테고리를 찾을 수 없습니다");
-        }
+    @Test
+    @DisplayName("상품을 등록할 때 존재하지 않는 카테고리로 등록하면 예외가 발생한다")
+    void registeringWithUnknownCategoryRaises() {
+        assertThatThrownBy(() -> productService.create("상품", 5000, "img", 9999L))
+            .isInstanceOf(CoreException.class)
+            .hasMessageContaining("카테고리를 찾을 수 없습니다");
     }
 
     private Category saveCategory() {
