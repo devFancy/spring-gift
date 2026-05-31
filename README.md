@@ -37,6 +37,7 @@ Controller 안에 데이터 접근부터 비즈니스 처리까지 한데 뒤섞
 - [x] 도메인 모델링 문서화 - 용어 사전과 도메인별 속성/행위/정책을 `docs/gift-domain-modeling.md` 에 정리
 - [x] ADR 작성 - 선택지가 둘 이상이었던 설계 결정을 4개 ADR 로 기록
 - [x] 도메인 규칙 순수 단위 테스트 추가 - Spring 없이 VO 검증과 도메인 메서드 정책 검증
+- [x] ControllerTest를 API 문서화 중심 DocsTest로 전환 - 서비스 Mock 기반 독립 테스트, DB 없이 API 계약 문서화
 
 </details>
 
