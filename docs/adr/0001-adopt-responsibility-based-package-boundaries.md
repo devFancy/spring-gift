@@ -1,4 +1,4 @@
-# 1. Adopt six-layer package boundary
+# 1. Adopt responsibility-based package boundaries
 
 Date: 2026-05-19
 
