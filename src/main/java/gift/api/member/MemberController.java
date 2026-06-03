@@ -28,7 +28,7 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<AuthDto.Response>> login(@Valid @RequestBody MemberDto.Request request) {
+    public ResponseEntity<ApiResponse<AuthDto.Response>> login(@Valid @RequestBody AuthDto.LoginRequest request) {
         String token = memberService.login(request.email(), request.password());
         return ResponseEntity.ok(ApiResponse.success(new AuthDto.Response(token)));
     }
