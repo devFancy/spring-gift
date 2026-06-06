@@ -7,6 +7,7 @@ import gift.domain.member.Member;
 import gift.domain.member.MemberRepository;
 import gift.domain.option.Option;
 import gift.domain.option.OptionRepository;
+import gift.domain.order.Order;
 import gift.domain.product.Product;
 import gift.domain.product.ProductRepository;
 import gift.support.error.CoreException;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("선물 주문")
@@ -33,6 +35,27 @@ class OrderServiceTest extends IntegrationTestSupport {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Test
+    @DisplayName("회원이 주문하면 주문이 저장되고 재고와 포인트가 차감된다")
+    void placeSavesOrderAndDeductsStockAndPoint() {
+        // given
+        Member member = saveMemberWithPoint("buyer@example.com", 10_000);
+        Option option = saveOption(2_000, 5);
+
+        // when
+        Order order = orderService.place(member.getId(), option.getId(), 2, "선물");
+
+        // then
+        assertThat(order.getId()).isNotNull();
+        assertThat(order.getQuantity().value()).isEqualTo(2);
+
+        Option updatedOption = optionRepository.findById(option.getId()).orElseThrow();
+        assertThat(updatedOption.getQuantity().value()).isEqualTo(3);
+
+        Member updatedMember = memberRepository.findById(member.getId()).orElseThrow();
+        assertThat(updatedMember.getPoint().value()).isEqualTo(6_000);
+    }
 
     @Test
     @DisplayName("회원이 주문을 생성할 때 옵션 재고보다 많이 주문하면 예외가 발생한다")
